@@ -2,12 +2,13 @@
 
 import { ReactNode } from 'react';
 import { WagmiProvider, createConfig, http } from 'wagmi';
-import { base } from 'wagmi/chains';
+import { baseSepolia } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { coinbaseWallet } from 'wagmi/connectors';
+import { OnchainKitProvider } from '@coinbase/onchainkit';
 
 const config = createConfig({
-  chains: [base],
+  chains: [baseSepolia],
   connectors: [
     coinbaseWallet({
       appName: 'ConditionalEscrow',
@@ -15,7 +16,7 @@ const config = createConfig({
     }),
   ],
   transports: {
-    [base.id]: http(),
+    [baseSepolia.id]: http(),
   },
 });
 
@@ -25,7 +26,15 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        {children}
+        <OnchainKitProvider
+          apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
+          chain={baseSepolia}
+          config={{
+            paymaster: process.env.NEXT_PUBLIC_PAYMASTER_URL,
+          }}
+        >
+          {children}
+        </OnchainKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

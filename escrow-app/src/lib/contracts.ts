@@ -1,6 +1,6 @@
 // Contract addresses on Base
 export const CONTRACT_ADDRESS = '0x660d07d944C28C5693DC983B5C5ac1b74C5645D3';
-export const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+export const USDC_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
 
 // Escrow Contract ABI
 export const ESCROW_ABI = [
