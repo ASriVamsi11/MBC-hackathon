@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { DollarSign, Wallet, Menu, X } from 'lucide-react';
+import { DollarSign, Wallet, Menu, X, Home, Zap, Trophy, Users, Search, User } from 'lucide-react';
 import { useUsername } from '@/hooks/useUsername';
 import { formatAddress } from '@/lib/utils';
 
@@ -13,9 +13,9 @@ export default function Header() {
   const { disconnect } = useDisconnect();
   const { username } = useUsername(address);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // Prevent hydration errors
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -29,24 +29,10 @@ export default function Header() {
               <DollarSign className="text-white" size={24} />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">ConditionalEscrow</h1>
+              <h1 className="text-xl font-bold text-gray-900">BetterTogether</h1>
               <p className="text-xs text-gray-500 hidden sm:block">Challenge friends on Polymarket</p>
             </div>
           </Link>
-
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium transition">
-              Home
-            </Link>
-            <Link href="/create" className="text-gray-700 hover:text-indigo-600 font-medium transition">
-              Create Challenge
-            </Link>
-            {mounted && isConnected && (
-              <Link href="/my-escrows" className="text-gray-700 hover:text-indigo-600 font-medium transition">
-                My Challenges
-              </Link>
-            )}
-          </nav>
 
           <div className="flex items-center gap-4">
             {!mounted ? (
@@ -61,53 +47,154 @@ export default function Header() {
               </button>
             ) : (
               <div className="flex items-center gap-3">
-                <Link href={`/profile/${address}`} className="hidden sm:block text-right hover:opacity-80 transition">
+                <Link href="/profile" className="hidden sm:block text-right hover:opacity-80 transition">
                   <div className="text-sm font-medium text-gray-900">
                     {username || formatAddress(address!)}
                   </div>
                 </Link>
                 <button
                   onClick={() => disconnect()}
-                  className="hidden sm:block px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm transition text-gray-900 hover:text-gray-900"
+                  className="hidden sm:block px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm transition"
                 >
                   Disconnect
                 </button>
+
+                {/* Desktop Menu Button */}
+                <div className="hidden sm:block relative">
+                  <button
+                    onClick={() => setDesktopMenuOpen(!desktopMenuOpen)}
+                    className="p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+                  >
+                    <Menu size={24} />
+                  </button>
+
+                  {/* Desktop Dropdown Menu */}
+                  {desktopMenuOpen && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-10" 
+                        onClick={() => setDesktopMenuOpen(false)}
+                      />
+                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20">
+                        <Link
+                          href="/"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          onClick={() => setDesktopMenuOpen(false)}
+                        >
+                          <Home size={20} />
+                          <span className="font-medium">Home</span>
+                        </Link>
+                        <Link
+                          href="/create"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          onClick={() => setDesktopMenuOpen(false)}
+                        >
+                          <Zap size={20} />
+                          <span className="font-medium">Create Challenge</span>
+                        </Link>
+                        <Link
+                          href="/my-escrows"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          onClick={() => setDesktopMenuOpen(false)}
+                        >
+                          <Trophy size={20} />
+                          <span className="font-medium">My Challenges</span>
+                        </Link>
+                        <div className="border-t border-gray-200 my-2" />
+                        <Link
+                          href="/leaderboard"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          onClick={() => setDesktopMenuOpen(false)}
+                        >
+                          <Trophy size={20} className="text-yellow-500" />
+                          <span className="font-medium">Leaderboard</span>
+                        </Link>
+                        <Link
+                          href="/friends"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          onClick={() => setDesktopMenuOpen(false)}
+                        >
+                          <Users size={20} />
+                          <span className="font-medium">Friends</span>
+                        </Link>
+                        <Link
+                          href="/search"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          onClick={() => setDesktopMenuOpen(false)}
+                        >
+                          <Search size={20} />
+                          <span className="font-medium">Search Users</span>
+                        </Link>
+                        <div className="border-t border-gray-200 my-2" />
+                        <Link
+                          href="/profile"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          onClick={() => setDesktopMenuOpen(false)}
+                        >
+                          <User size={20} className="text-indigo-600" />
+                          <span className="font-medium">Profile</span>
+                        </Link>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             )}
 
+            {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+              className="sm:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
 
+        {/* Mobile Menu */}
         {mobileMenuOpen && mounted && (
-          <div className="md:hidden mt-4 pb-4 border-t border-gray-200 pt-4">
+          <div className="sm:hidden mt-4 pb-4 border-t border-gray-200 pt-4">
             <nav className="flex flex-col gap-3">
-              <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+              <Link href="/" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                <Home size={20} />
                 Home
               </Link>
-              <Link href="/create" className="text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+              <Link href="/create" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                <Zap size={20} />
                 Create Challenge
               </Link>
               {isConnected && (
                 <>
-                  <Link href="/my-escrows" className="text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href="/my-escrows" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                    <Trophy size={20} />
                     My Challenges
                   </Link>
-                  <Link href={`/profile/${address}`} className="text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
-                    My Profile
+                  <div className="border-t border-gray-200 my-2" />
+                  <Link href="/leaderboard" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                    <Trophy size={20} className="text-yellow-500" />
+                    Leaderboard
                   </Link>
+                  <Link href="/friends" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                    <Users size={20} />
+                    Friends
+                  </Link>
+                  <Link href="/search" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                    <Search size={20} />
+                    Search Users
+                  </Link>
+                  <Link href="/profile" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                    <User size={20} />
+                    Profile
+                  </Link>
+                  <div className="border-t border-gray-200 my-2" />
                   <button
                     onClick={() => {
                       disconnect();
                       setMobileMenuOpen(false);
                     }}
-                    className="text-left text-gray-600 hover:text-gray-700 font-medium py-2 transition"
+                    className="text-left text-red-600 hover:text-red-700 font-medium py-2 transition flex items-center gap-3"
                   >
+                    <Wallet size={20} />
                     Disconnect
                   </button>
                 </>
