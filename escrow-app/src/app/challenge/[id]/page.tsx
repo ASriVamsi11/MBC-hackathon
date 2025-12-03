@@ -80,11 +80,11 @@ export default function MyChallengesPage() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 p-12 text-center max-w-md">
-          <Trophy size={64} className="mx-auto text-gray-400 mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Connect Your Wallet</h2>
-          <p className="text-gray-600">Connect your wallet to view your challenges</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-12 text-center max-w-md">
+          <Trophy size={64} className="mx-auto text-gray-400 dark:text-gray-600 mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Connect Your Wallet</h2>
+          <p className="text-gray-600 dark:text-gray-400">Connect your wallet to view your challenges</p>
         </div>
       </div>
     );
@@ -105,7 +105,7 @@ export default function MyChallengesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900/20">
       <div className="max-w-6xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl p-8 mb-8">
@@ -129,30 +129,30 @@ export default function MyChallengesPage() {
           <StatCard
             label="Total"
             value={stats.total}
-            gradient="from-gray-50 to-slate-50"
-            textColor="text-gray-900"
-            borderColor="border-gray-200"
+            gradient="from-gray-50 to-slate-50 dark:from-gray-800 dark:to-gray-700"
+            textColor="text-gray-900 dark:text-white"
+            borderColor="border-gray-200 dark:border-gray-600"
           />
           <StatCard
             label="Active"
             value={stats.active}
-            gradient="from-blue-50 to-indigo-50"
-            textColor="text-indigo-600"
-            borderColor="border-indigo-200"
+            gradient="from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30"
+            textColor="text-indigo-600 dark:text-indigo-400"
+            borderColor="border-indigo-200 dark:border-indigo-800"
           />
           <StatCard
             label="Won"
             value={stats.won}
-            gradient="from-green-50 to-emerald-50"
-            textColor="text-green-600"
-            borderColor="border-green-200"
+            gradient="from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30"
+            textColor="text-green-600 dark:text-green-400"
+            borderColor="border-green-200 dark:border-green-800"
           />
           <StatCard
             label="Lost"
             value={stats.lost}
-            gradient="from-red-50 to-rose-50"
-            textColor="text-red-600"
-            borderColor="border-red-200"
+            gradient="from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30"
+            textColor="text-red-600 dark:text-red-400"
+            borderColor="border-red-200 dark:border-red-800"
           />
         </div>
 
@@ -163,7 +163,7 @@ export default function MyChallengesPage() {
             className={`px-6 py-3 rounded-xl font-semibold transition-all ${
               filter === 'all'
                 ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white hover:shadow-md border border-gray-200'
+                : 'bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-700 hover:shadow-md border border-gray-200 dark:border-gray-700'
             }`}
           >
             All
@@ -173,7 +173,7 @@ export default function MyChallengesPage() {
             className={`px-6 py-3 rounded-xl font-semibold transition-all ${
               filter === 'active'
                 ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white hover:shadow-md border border-gray-200'
+                : 'bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-700 hover:shadow-md border border-gray-200 dark:border-gray-700'
             }`}
           >
             Active
@@ -183,7 +183,7 @@ export default function MyChallengesPage() {
             className={`px-6 py-3 rounded-xl font-semibold transition-all ${
               filter === 'completed'
                 ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white hover:shadow-md border border-gray-200'
+                : 'bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-700 hover:shadow-md border border-gray-200 dark:border-gray-700'
             }`}
           >
             Completed
@@ -192,10 +192,10 @@ export default function MyChallengesPage() {
 
         {/* Challenges List */}
         {filteredChallenges.length === 0 ? (
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-12 text-center">
-            <Trophy size={64} className="mx-auto text-gray-400 mb-4" />
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">No Challenges Yet</h3>
-            <p className="text-gray-600 mb-6">Create your first challenge to get started!</p>
+          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-12 text-center">
+            <Trophy size={64} className="mx-auto text-gray-400 dark:text-gray-600 mb-4" />
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No Challenges Yet</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">Create your first challenge to get started!</p>
             <Link
               href="/create"
               className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all font-semibold transform hover:-translate-y-0.5"
@@ -225,7 +225,7 @@ function StatCard({ label, value, gradient, textColor, borderColor }: {
   return (
     <div className={`bg-gradient-to-br ${gradient} rounded-xl p-5 border ${borderColor} shadow-md`}>
       <div className={`text-3xl font-bold ${textColor} mb-1`}>{value}</div>
-      <div className="text-sm text-gray-600 font-medium">{label}</div>
+      <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">{label}</div>
     </div>
   );
 }
@@ -237,47 +237,47 @@ function ChallengeCard({ challenge, userAddress }: { challenge: Challenge; userA
     pending: {
       icon: <Clock size={20} />,
       label: 'Waiting for opponent',
-      gradient: 'from-yellow-50 to-amber-50',
-      borderColor: 'border-yellow-200',
-      badgeBg: 'bg-yellow-100',
-      badgeText: 'text-yellow-800',
-      badgeBorder: 'border-yellow-200'
+      gradient: 'from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30',
+      borderColor: 'border-yellow-200 dark:border-yellow-800',
+      badgeBg: 'bg-yellow-100 dark:bg-yellow-900/50',
+      badgeText: 'text-yellow-800 dark:text-yellow-300',
+      badgeBorder: 'border-yellow-200 dark:border-yellow-700'
     },
     active: {
       icon: <AlertCircle size={20} />,
       label: 'In Progress',
-      gradient: 'from-blue-50 to-indigo-50',
-      borderColor: 'border-blue-200',
-      badgeBg: 'bg-blue-100',
-      badgeText: 'text-blue-800',
-      badgeBorder: 'border-blue-200'
+      gradient: 'from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30',
+      borderColor: 'border-blue-200 dark:border-blue-800',
+      badgeBg: 'bg-blue-100 dark:bg-blue-900/50',
+      badgeText: 'text-blue-800 dark:text-blue-300',
+      badgeBorder: 'border-blue-200 dark:border-blue-700'
     },
     won: {
       icon: <CheckCircle size={20} />,
       label: 'You Won!',
-      gradient: 'from-green-50 to-emerald-50',
-      borderColor: 'border-green-200',
-      badgeBg: 'bg-green-100',
-      badgeText: 'text-green-800',
-      badgeBorder: 'border-green-200'
+      gradient: 'from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30',
+      borderColor: 'border-green-200 dark:border-green-800',
+      badgeBg: 'bg-green-100 dark:bg-green-900/50',
+      badgeText: 'text-green-800 dark:text-green-300',
+      badgeBorder: 'border-green-200 dark:border-green-700'
     },
     lost: {
       icon: <XCircle size={20} />,
       label: 'You Lost',
-      gradient: 'from-red-50 to-rose-50',
-      borderColor: 'border-red-200',
-      badgeBg: 'bg-red-100',
-      badgeText: 'text-red-800',
-      badgeBorder: 'border-red-200'
+      gradient: 'from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30',
+      borderColor: 'border-red-200 dark:border-red-800',
+      badgeBg: 'bg-red-100 dark:bg-red-900/50',
+      badgeText: 'text-red-800 dark:text-red-300',
+      badgeBorder: 'border-red-200 dark:border-red-700'
     },
     cancelled: {
       icon: <XCircle size={20} />,
       label: 'Cancelled',
-      gradient: 'from-gray-50 to-slate-50',
-      borderColor: 'border-gray-200',
-      badgeBg: 'bg-gray-100',
-      badgeText: 'text-gray-800',
-      badgeBorder: 'border-gray-200'
+      gradient: 'from-gray-50 to-slate-50 dark:from-gray-800 dark:to-gray-700',
+      borderColor: 'border-gray-200 dark:border-gray-600',
+      badgeBg: 'bg-gray-100 dark:bg-gray-700',
+      badgeText: 'text-gray-800 dark:text-gray-300',
+      badgeBorder: 'border-gray-200 dark:border-gray-600'
     }
   };
 
@@ -293,10 +293,10 @@ function ChallengeCard({ challenge, userAddress }: { challenge: Challenge; userA
           </div>
           
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-bold text-gray-900 mb-1">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
               vs {opponentUsername || formatAddress(challenge.opponent)}
             </h3>
-            <p className="text-sm text-gray-600">{challenge.createdAt}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{challenge.createdAt}</p>
           </div>
         </div>
 
@@ -308,13 +308,13 @@ function ChallengeCard({ challenge, userAddress }: { challenge: Challenge; userA
       </div>
 
       {/* Market Title */}
-      <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 mb-4 border border-gray-200/50">
-        <h4 className="font-semibold text-gray-900 mb-2">{challenge.marketTitle}</h4>
+      <div className="bg-white/60 dark:bg-gray-700/60 backdrop-blur-sm rounded-xl p-4 mb-4 border border-gray-200/50 dark:border-gray-600/50">
+        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">{challenge.marketTitle}</h4>
         <a 
           href={challenge.marketUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1"
+          className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium flex items-center gap-1"
         >
           View on Polymarket <ExternalLink size={14} />
         </a>
@@ -323,25 +323,25 @@ function ChallengeCard({ challenge, userAddress }: { challenge: Challenge; userA
       {/* Challenge Details */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <div>
-          <div className="text-xs text-gray-600 mb-1">Stake Amount</div>
-          <div className="text-lg font-bold text-gray-900">{challenge.amount} ETH</div>
+          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Stake Amount</div>
+          <div className="text-lg font-bold text-gray-900 dark:text-white">{challenge.amount} ETH</div>
         </div>
         <div>
-          <div className="text-xs text-gray-600 mb-1">Your Prediction</div>
-          <div className={`text-lg font-bold ${challenge.yourPrediction === 'yes' ? 'text-green-600' : 'text-red-600'}`}>
+          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Your Prediction</div>
+          <div className={`text-lg font-bold ${challenge.yourPrediction === 'yes' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
             {challenge.yourPrediction.toUpperCase()}
           </div>
         </div>
         <div>
-          <div className="text-xs text-gray-600 mb-1">Potential Win</div>
-          <div className="text-lg font-bold text-green-600">{(parseFloat(challenge.amount) * 2).toFixed(2)} ETH</div>
+          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Potential Win</div>
+          <div className="text-lg font-bold text-green-600 dark:text-green-400">{(parseFloat(challenge.amount) * 2).toFixed(2)} ETH</div>
         </div>
       </div>
 
       {/* Action Button for pending */}
       {challenge.status === 'pending' && (
-        <div className="mt-4 pt-4 border-t border-gray-200/50">
-          <button className="w-full bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition-all font-semibold">
+        <div className="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-600/50">
+          <button className="w-full bg-red-500 dark:bg-red-600 text-white px-4 py-2 rounded-xl hover:bg-red-600 dark:hover:bg-red-700 transition-all font-semibold">
             Cancel Challenge
           </button>
         </div>

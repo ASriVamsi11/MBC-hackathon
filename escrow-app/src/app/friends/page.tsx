@@ -54,12 +54,12 @@ export default function FriendsPage() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
         <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-12 border border-gray-100">
-            <Users size={64} className="mx-auto text-gray-400 mb-4" />
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Connect Your Wallet</h1>
-            <p className="text-gray-600">Connect your wallet to see your friends and challenge history</p>
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-12">
+            <Users size={64} className="mx-auto text-gray-400 dark:text-gray-600 mb-4" />
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Connect Your Wallet</h1>
+            <p className="text-gray-600 dark:text-gray-400">Connect your wallet to see your friends and challenge history</p>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@ export default function FriendsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
       <div className="max-w-6xl mx-auto px-4 py-12">
         {/* Header with gradient background */}
         <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-700 p-8 shadow-lg">
@@ -89,23 +89,23 @@ export default function FriendsPage() {
         {/* Search Bar with frosted glass effect */}
         <div className="mb-8">
           <div className="relative">
-            <Search className="absolute left-4 top-4 text-gray-400" size={20} />
+            <Search className="absolute left-4 top-4 text-gray-400 dark:text-gray-500" size={20} />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search friends by name or address..."
-              className="w-full pl-12 pr-4 py-4 border border-gray-200/50 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 bg-white/80 backdrop-blur-sm shadow-sm transition-all"
+              className="w-full pl-12 pr-4 py-4 border border-gray-200/50 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 dark:text-white bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
             />
           </div>
         </div>
 
         {/* Friends List */}
         {friends.length === 0 ? (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-12 text-center">
-            <Users size={48} className="mx-auto text-gray-400 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Friends Yet</h3>
-            <p className="text-gray-600 mb-6">Challenge someone to start building your network!</p>
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-12 text-center">
+            <Users size={48} className="mx-auto text-gray-400 dark:text-gray-600 mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Friends Yet</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">Challenge someone to start building your network!</p>
             <Link
               href="/create"
               className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all font-semibold transform hover:-translate-y-0.5"
@@ -144,7 +144,7 @@ function FriendCard({ friend, currentUser, searchQuery }: { friend: Friend; curr
     : 0;
 
   return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-md border border-gray-100/50 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+    <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-md border border-gray-100/50 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
         <div className="flex items-center gap-4">
@@ -155,40 +155,40 @@ function FriendCard({ friend, currentUser, searchQuery }: { friend: Friend; curr
           <div>
             <Link 
               href={`/profile/${friend.address}`}
-              className="text-lg font-bold text-gray-900 hover:text-indigo-600 transition"
+              className="text-lg font-bold text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
             >
               {username || formatAddress(friend.address)}
             </Link>
-            <p className="text-sm text-gray-500 font-mono">{formatAddress(friend.address)}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{formatAddress(friend.address)}</p>
           </div>
         </div>
       </div>
 
       {/* Stats with glassmorphism */}
       <div className="grid grid-cols-3 gap-3 mb-5">
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-3 text-center border border-gray-100 shadow-sm">
-          <div className="text-2xl font-bold text-gray-900">{friend.challengesWithYou}</div>
-          <div className="text-xs text-gray-600 font-medium">Together</div>
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 rounded-xl p-3 text-center border border-gray-100 dark:border-gray-600 shadow-sm">
+          <div className="text-2xl font-bold text-gray-900 dark:text-white">{friend.challengesWithYou}</div>
+          <div className="text-xs text-gray-600 dark:text-gray-400 font-medium">Together</div>
         </div>
-        <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-3 text-center border border-green-100 shadow-sm">
-          <div className="text-2xl font-bold text-green-600">{friend.yourWins}</div>
-          <div className="text-xs text-gray-600 font-medium">Your Wins</div>
+        <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-xl p-3 text-center border border-green-100 dark:border-green-800 shadow-sm">
+          <div className="text-2xl font-bold text-green-600 dark:text-green-400">{friend.yourWins}</div>
+          <div className="text-xs text-gray-600 dark:text-gray-400 font-medium">Your Wins</div>
         </div>
-        <div className="bg-gradient-to-br from-red-50 to-rose-50 rounded-xl p-3 text-center border border-red-100 shadow-sm">
-          <div className="text-2xl font-bold text-red-600">{friend.theirWins}</div>
-          <div className="text-xs text-gray-600 font-medium">Their Wins</div>
+        <div className="bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30 rounded-xl p-3 text-center border border-red-100 dark:border-red-800 shadow-sm">
+          <div className="text-2xl font-bold text-red-600 dark:text-red-400">{friend.theirWins}</div>
+          <div className="text-xs text-gray-600 dark:text-gray-400 font-medium">Their Wins</div>
         </div>
       </div>
 
       {/* Win Rate Bar with gradient */}
       <div className="mb-5">
         <div className="flex justify-between text-sm mb-2">
-          <span className="text-gray-600 font-medium">Your win rate</span>
-          <span className={`font-bold ${winRate >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+          <span className="text-gray-600 dark:text-gray-400 font-medium">Your win rate</span>
+          <span className={`font-bold ${winRate >= 50 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
             {winRate}%
           </span>
         </div>
-        <div className="w-full bg-gray-100 rounded-full h-2.5 shadow-inner">
+        <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2.5 shadow-inner">
           <div
             className={`h-2.5 rounded-full transition-all shadow-sm ${
               winRate >= 50 

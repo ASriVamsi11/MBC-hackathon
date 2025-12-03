@@ -8,11 +8,11 @@ export default function HomePage() {
   const { isConnected } = useAccount();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900/20">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5" style={{
+        <div className="absolute inset-0 opacity-5 dark:opacity-10" style={{
           backgroundImage: 'radial-gradient(circle at 2px 2px, rgb(99, 102, 241) 1px, transparent 0)',
           backgroundSize: '48px 48px'
         }} />
@@ -20,20 +20,20 @@ export default function HomePage() {
         <div className="relative max-w-6xl mx-auto px-4 py-20 md:py-32">
           <div className="text-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-indigo-100 rounded-full px-4 py-2 mb-8 shadow-lg">
-              <Sparkles size={16} className="text-indigo-600" />
-              <span className="text-sm font-semibold text-indigo-600">Challenge Friends • Win Big</span>
+            <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-indigo-100 dark:border-indigo-800 rounded-full px-4 py-2 mb-8 shadow-lg">
+              <Sparkles size={16} className="text-indigo-600 dark:text-indigo-400" />
+              <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">Challenge Friends • Win Big</span>
             </div>
 
             {/* Main Heading */}
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
               Challenge Friends on{' '}
               <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                 Polymarket
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto">
               Create conditional escrows, challenge your friends on prediction markets, and let the smart contract decide the winner
             </p>
 
@@ -51,7 +51,7 @@ export default function HomePage() {
               {isConnected && (
                 <Link
                   href="/my-escrows"
-                  className="bg-white/80 backdrop-blur-sm border-2 border-gray-200 text-gray-900 px-8 py-4 rounded-xl hover:shadow-xl transition-all font-bold text-lg flex items-center justify-center gap-2 hover:border-indigo-300 transform hover:-translate-y-1"
+                  className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-2 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white px-8 py-4 rounded-xl hover:shadow-xl transition-all font-bold text-lg flex items-center justify-center gap-2 hover:border-indigo-300 dark:hover:border-indigo-700 transform hover:-translate-y-1"
                 >
                   <Trophy size={24} />
                   My Challenges
@@ -61,23 +61,23 @@ export default function HomePage() {
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-6 max-w-3xl mx-auto">
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-100">
+              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
                 <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
                   500+
                 </div>
-                <div className="text-sm text-gray-600 font-medium">Challenges Created</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Challenges Created</div>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-100">
+              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
                 <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
                   $50K+
                 </div>
-                <div className="text-sm text-gray-600 font-medium">Total Staked</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Total Staked</div>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-100">
+              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
                 <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
                   1,200+
                 </div>
-                <div className="text-sm text-gray-600 font-medium">Active Users</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Active Users</div>
               </div>
             </div>
           </div>
@@ -85,13 +85,13 @@ export default function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 bg-gradient-to-br from-white to-gray-50">
+      <section className="py-20 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800/50">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               How It Works
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
               Challenge friends in three simple steps
             </p>
           </div>
@@ -126,38 +126,38 @@ export default function HomePage() {
       <section className="py-20">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Why Base Bets?
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
               The most trusted way to challenge friends on prediction markets
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <FeatureCard
-              icon={<Shield size={40} className="text-indigo-600" />}
+              icon={<Shield size={40} className="text-indigo-600 dark:text-indigo-400" />}
               title="Trustless & Secure"
               description="Smart contracts eliminate the need for trust. Funds are held securely on-chain and automatically distributed to the winner."
-              bgGradient="from-indigo-50 to-blue-50"
+              bgGradient="from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20"
             />
             <FeatureCard
-              icon={<Zap size={40} className="text-purple-600" />}
+              icon={<Zap size={40} className="text-purple-600 dark:text-purple-400" />}
               title="Instant Settlement"
               description="No waiting for manual payouts. As soon as the Polymarket resolves, winners automatically receive their funds."
-              bgGradient="from-purple-50 to-pink-50"
+              bgGradient="from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20"
             />
             <FeatureCard
-              icon={<Users size={40} className="text-green-600" />}
+              icon={<Users size={40} className="text-green-600 dark:text-green-400" />}
               title="Track Your Friends"
               description="See your win/loss record against friends, view leaderboards, and build your reputation as a top challenger."
-              bgGradient="from-green-50 to-emerald-50"
+              bgGradient="from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20"
             />
             <FeatureCard
-              icon={<TrendingUp size={40} className="text-yellow-600" />}
+              icon={<TrendingUp size={40} className="text-yellow-600 dark:text-yellow-400" />}
               title="Any Market Size"
               description="Challenge friends on any Polymarket, from elections to sports to crypto. Set any stake amount you're comfortable with."
-              bgGradient="from-yellow-50 to-amber-50"
+              bgGradient="from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20"
             />
           </div>
         </div>
@@ -203,7 +203,7 @@ function StepCard({ number, icon, title, description, gradient }: {
   gradient: string;
 }) {
   return (
-    <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all transform hover:-translate-y-2">
+    <div className="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 hover:shadow-2xl transition-all transform hover:-translate-y-2">
       {/* Number Badge */}
       <div className={`absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br ${gradient} rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg`}>
         {number}
@@ -214,8 +214,8 @@ function StepCard({ number, icon, title, description, gradient }: {
         {icon}
       </div>
       
-      <h3 className="text-2xl font-bold text-gray-900 mb-3">{title}</h3>
-      <p className="text-gray-600 leading-relaxed">{description}</p>
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{title}</h3>
+      <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
     </div>
   );
 }
@@ -227,10 +227,10 @@ function FeatureCard({ icon, title, description, bgGradient }: {
   bgGradient: string;
 }) {
   return (
-    <div className={`bg-gradient-to-br ${bgGradient} rounded-2xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition-all transform hover:-translate-y-1`}>
+    <div className={`bg-gradient-to-br ${bgGradient} rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8 hover:shadow-xl transition-all transform hover:-translate-y-1`}>
       <div className="mb-4">{icon}</div>
-      <h3 className="text-2xl font-bold text-gray-900 mb-3">{title}</h3>
-      <p className="text-gray-600 leading-relaxed">{description}</p>
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{title}</h3>
+      <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
     </div>
   );
 }

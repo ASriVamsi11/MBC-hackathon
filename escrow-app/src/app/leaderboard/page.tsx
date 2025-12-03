@@ -31,7 +31,7 @@ export default function LeaderboardPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900/20">
       <div className="max-w-6xl mx-auto px-4 py-12">
         {/* Header with gradient and crown */}
         <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl p-8 mb-8">
@@ -58,8 +58,8 @@ export default function LeaderboardPage() {
               entry={leaderboard[1]} 
               rank={2}
               gradient="from-gray-300 via-gray-400 to-gray-500"
-              bgGradient="from-gray-50 to-slate-50"
-              borderColor="border-gray-200"
+              bgGradient="from-gray-50 to-slate-50 dark:from-gray-800 dark:to-gray-700"
+              borderColor="border-gray-200 dark:border-gray-600"
               height="h-72"
             />
             
@@ -68,8 +68,8 @@ export default function LeaderboardPage() {
               entry={leaderboard[0]} 
               rank={1}
               gradient="from-yellow-400 via-yellow-500 to-amber-500"
-              bgGradient="from-yellow-50 to-amber-50"
-              borderColor="border-yellow-200"
+              bgGradient="from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30"
+              borderColor="border-yellow-200 dark:border-yellow-800"
               height="h-80"
             />
             
@@ -78,30 +78,30 @@ export default function LeaderboardPage() {
               entry={leaderboard[2]} 
               rank={3}
               gradient="from-orange-400 via-orange-500 to-amber-600"
-              bgGradient="from-orange-50 to-amber-50"
-              borderColor="border-orange-200"
+              bgGradient="from-orange-50 to-amber-50 dark:from-orange-900/30 dark:to-amber-900/30"
+              borderColor="border-orange-200 dark:border-orange-800"
               height="h-72"
             />
           </div>
         )}
 
         {/* Leaderboard Table */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100/50 overflow-hidden">
-          <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
-            <h2 className="text-xl font-bold text-gray-900">Rankings</h2>
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700 overflow-hidden">
+          <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-800">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Rankings</h2>
           </div>
           
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gradient-to-r from-gray-50 to-slate-50 border-b border-gray-200">
+              <thead className="bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900 dark:to-gray-800 border-b border-gray-200 dark:border-gray-700">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Rank</th>
-                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">User</th>
-                  <th className="px-6 py-4 text-right text-sm font-bold text-gray-900">Total Won</th>
-                  <th className="px-6 py-4 text-right text-sm font-bold text-gray-900">W/L</th>
+                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-900 dark:text-white">Rank</th>
+                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-900 dark:text-white">User</th>
+                  <th className="px-6 py-4 text-right text-sm font-bold text-gray-900 dark:text-white">Total Won</th>
+                  <th className="px-6 py-4 text-right text-sm font-bold text-gray-900 dark:text-white">W/L</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                 {leaderboard.map((entry, index) => (
                   <LeaderboardRow key={entry.address} entry={entry} rank={index + 1} />
                 ))}
@@ -146,7 +146,7 @@ function PodiumCard({ entry, rank, gradient, bgGradient, borderColor, height }: 
         {/* User Info */}
         <Link 
           href={`/profile/${entry.address}`}
-          className="text-lg font-bold text-gray-900 hover:text-indigo-600 transition text-center mb-2 truncate max-w-full px-2"
+          className="text-lg font-bold text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition text-center mb-2 truncate max-w-full px-2"
         >
           {username || formatAddress(entry.address)}
         </Link>
@@ -154,15 +154,15 @@ function PodiumCard({ entry, rank, gradient, bgGradient, borderColor, height }: 
         {/* Stats */}
         <div className="text-center space-y-3 mt-auto w-full">
           <div>
-            <div className="text-2xl font-bold text-green-600">${entry.totalWon.toLocaleString()}</div>
-            <div className="text-xs text-gray-600 font-medium">Total Won</div>
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">${entry.totalWon.toLocaleString()}</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400 font-medium">Total Won</div>
           </div>
           <div className="flex gap-4 justify-center text-sm">
             <div>
-              <div className="font-bold text-green-600">{entry.wins}W</div>
+              <div className="font-bold text-green-600 dark:text-green-400">{entry.wins}W</div>
             </div>
             <div>
-              <div className="font-bold text-red-600">{entry.losses}L</div>
+              <div className="font-bold text-red-600 dark:text-red-400">{entry.losses}L</div>
             </div>
           </div>
         </div>
@@ -175,47 +175,47 @@ function LeaderboardRow({ entry, rank }: { entry: LeaderboardEntry; rank: number
   const { username } = useUsername(entry.address);
 
   const getMedalIcon = () => {
-    if (rank === 1) return <Trophy className="text-yellow-500" size={24} />;
-    if (rank === 2) return <Medal className="text-gray-400" size={24} />;
-    if (rank === 3) return <Medal className="text-orange-600" size={24} />;
-    return <span className="text-lg font-bold text-gray-600">#{rank}</span>;
+    if (rank === 1) return <Trophy className="text-yellow-500 dark:text-yellow-400" size={24} />;
+    if (rank === 2) return <Medal className="text-gray-400 dark:text-gray-500" size={24} />;
+    if (rank === 3) return <Medal className="text-orange-600 dark:text-orange-500" size={24} />;
+    return <span className="text-lg font-bold text-gray-600 dark:text-gray-400">#{rank}</span>;
   };
 
   return (
-    <tr className="hover:bg-gray-50/50 transition-all">
+    <tr className="hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition-all">
       <td className="px-6 py-5">
         <div className="flex items-center justify-center w-12">
           {rank <= 3 ? (
             getMedalIcon()
           ) : (
-            <div className="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center font-bold text-gray-700 shadow-sm">
+            <div className="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-xl flex items-center justify-center font-bold text-gray-700 dark:text-gray-300 shadow-sm">
               {rank}
             </div>
           )}
         </div>
       </td>
       <td className="px-6 py-5">
-        <Link href={`/profile/${entry.address}`} className="flex items-center gap-3 hover:text-indigo-600 transition group">
+        <Link href={`/profile/${entry.address}`} className="flex items-center gap-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition group">
           <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg group-hover:shadow-xl transition">
             {(username || formatAddress(entry.address)).slice(0, 2).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="font-semibold text-gray-900 truncate">{username || formatAddress(entry.address)}</div>
-            <div className="text-sm text-gray-500 font-mono truncate">{formatAddress(entry.address)}</div>
+            <div className="font-semibold text-gray-900 dark:text-white truncate">{username || formatAddress(entry.address)}</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 font-mono truncate">{formatAddress(entry.address)}</div>
           </div>
         </Link>
       </td>
       <td className="px-6 py-5 text-right">
         <div className="flex items-center justify-end gap-2">
-          <TrendingUp className="text-green-600" size={18} />
-          <span className="font-bold text-green-600 text-lg">${entry.totalWon.toLocaleString()}</span>
+          <TrendingUp className="text-green-600 dark:text-green-400" size={18} />
+          <span className="font-bold text-green-600 dark:text-green-400 text-lg">${entry.totalWon.toLocaleString()}</span>
         </div>
       </td>
       <td className="px-6 py-5 text-right">
         <div className="flex items-center justify-end gap-2">
-          <span className="text-green-600 font-bold">{entry.wins}W</span>
-          <span className="text-gray-400">/</span>
-          <span className="text-red-600 font-bold">{entry.losses}L</span>
+          <span className="text-green-600 dark:text-green-400 font-bold">{entry.wins}W</span>
+          <span className="text-gray-400 dark:text-gray-600">/</span>
+          <span className="text-red-600 dark:text-red-400 font-bold">{entry.losses}L</span>
         </div>
       </td>
     </tr>

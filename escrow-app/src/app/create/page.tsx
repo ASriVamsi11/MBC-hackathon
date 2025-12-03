@@ -29,12 +29,10 @@ export default function CreateChallengePage() {
   const [createdEscrowId, setCreatedEscrowId] = useState<number | null>(null);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
-  // Prevent hydration errors
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Search Polymarket markets
   useEffect(() => {
     const searchMarkets = async () => {
       if (searchQuery.length < 3) {
@@ -104,13 +102,12 @@ export default function CreateChallengePage() {
     window.open(url, '_blank');
   };
 
-  // Show loading state until mounted
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 p-12 text-center">
-          <Loader size={48} className="mx-auto text-indigo-600 mb-4 animate-spin" />
-          <p className="text-gray-600">Loading...</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-12 text-center">
+          <Loader size={48} className="mx-auto text-indigo-600 dark:text-indigo-400 mb-4 animate-spin" />
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
         </div>
       </div>
     );
@@ -118,11 +115,11 @@ export default function CreateChallengePage() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 p-12 text-center max-w-md">
-          <AlertCircle size={64} className="mx-auto text-gray-400 mb-4" />
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Connect Your Wallet</h1>
-          <p className="text-gray-600">Please connect your wallet to create a challenge</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-12 text-center max-w-md">
+          <AlertCircle size={64} className="mx-auto text-gray-400 dark:text-gray-600 mb-4" />
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Connect Your Wallet</h1>
+          <p className="text-gray-600 dark:text-gray-400">Please connect your wallet to create a challenge</p>
         </div>
       </div>
     );
@@ -130,17 +127,17 @@ export default function CreateChallengePage() {
 
   if (createdEscrowId !== null) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50/30 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-green-900/20 flex items-center justify-center px-4">
         <div className="max-w-3xl w-full">
-          <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl border border-green-100 p-12 text-center">
+          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-2xl border border-green-100 dark:border-green-800 p-12 text-center">
             <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
               <CheckCircle size={48} className="text-white" />
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-3">Challenge Created! 🎉</h1>
-            <p className="text-gray-600 mb-8 text-lg">Share this link with your friend to accept the challenge</p>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">Challenge Created! 🎉</h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg">Share this link with your friend to accept the challenge</p>
 
-            <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-5 mb-6 border border-gray-200 shadow-inner">
-              <code className="text-sm text-gray-800 break-all font-mono">{shareLink}</code>
+            <div className="bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900 dark:to-gray-800 rounded-xl p-5 mb-6 border border-gray-200 dark:border-gray-700 shadow-inner">
+              <code className="text-sm text-gray-800 dark:text-gray-200 break-all font-mono">{shareLink}</code>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
@@ -159,10 +156,10 @@ export default function CreateChallengePage() {
               </button>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={() => router.push('/my-escrows')}
-                className="text-gray-600 hover:text-gray-900 font-semibold transition"
+                className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-semibold transition"
               >
                 View My Challenges
               </button>
@@ -174,7 +171,7 @@ export default function CreateChallengePage() {
                   setYourAmount('');
                   setCounterpartyAmount('');
                 }}
-                className="text-indigo-600 hover:text-indigo-700 font-semibold transition"
+                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold transition"
               >
                 Create Another
               </button>
@@ -186,7 +183,7 @@ export default function CreateChallengePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900/20">
       <div className="max-w-3xl mx-auto px-4 py-12">
         {/* Notification */}
         {notification && (
@@ -204,7 +201,6 @@ export default function CreateChallengePage() {
 
         {/* Header */}
         <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl p-8 mb-8">
-          {/* Pattern overlay */}
           <div className="absolute inset-0 opacity-10" style={{
             backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
             backgroundSize: '40px 40px'
@@ -218,33 +214,33 @@ export default function CreateChallengePage() {
         </div>
 
         {/* Form */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 p-8">
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8">
           {/* Step 1: Select Market */}
           <div className="mb-8">
-            <label className="block text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
               <span className="w-7 h-7 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">1</span>
               Select Polymarket Prediction
             </label>
             <div className="relative mb-3">
-              <Target className="absolute left-4 top-4 text-gray-400" size={20} />
+              <Target className="absolute left-4 top-4 text-gray-400 dark:text-gray-500" size={20} />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search markets (e.g., 'Lakers', 'Bitcoin', 'Election')"
-                className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 bg-white shadow-sm transition-all"
+                className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 dark:text-white bg-white dark:bg-gray-700 shadow-sm transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
               />
             </div>
 
             {isSearching && (
-              <div className="text-center py-8 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl">
-                <Loader size={32} className="mx-auto text-indigo-600 animate-spin mb-2" />
-                <p className="text-gray-600 text-sm">Searching markets...</p>
+              <div className="text-center py-8 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl">
+                <Loader size={32} className="mx-auto text-indigo-600 dark:text-indigo-400 animate-spin mb-2" />
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Searching markets...</p>
               </div>
             )}
 
             {!isSearching && searchQuery && markets.length > 0 && (
-              <div className="space-y-2 max-h-80 overflow-y-auto bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-3 border border-gray-200">
+              <div className="space-y-2 max-h-80 overflow-y-auto bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900 dark:to-gray-800 rounded-xl p-3 border border-gray-200 dark:border-gray-700">
                 {markets.map((market) => (
                   <div
                     key={market.condition_id}
@@ -252,10 +248,10 @@ export default function CreateChallengePage() {
                       setSelectedMarket(market);
                       setSearchQuery('');
                     }}
-                    className="p-4 border-2 rounded-xl cursor-pointer transition-all border-gray-200 hover:border-indigo-400 hover:bg-white hover:shadow-md bg-white/80 backdrop-blur-sm"
+                    className="p-4 border-2 rounded-xl cursor-pointer transition-all border-gray-200 dark:border-gray-700 hover:border-indigo-400 dark:hover:border-indigo-600 hover:bg-white dark:hover:bg-gray-800 hover:shadow-md bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
                   >
-                    <div className="font-semibold text-gray-900 mb-2">{market.question}</div>
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <div className="font-semibold text-gray-900 dark:text-white mb-2">{market.question}</div>
+                    <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                       <span>Volume: ${((market.volume || 0) / 1000000).toFixed(1)}M</span>
                       <span>•</span>
                       <span>Closes: {new Date(market.end_date_iso).toLocaleDateString()}</span>
@@ -266,20 +262,20 @@ export default function CreateChallengePage() {
             )}
 
             {selectedMarket && !searchQuery && (
-              <div className="p-5 border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-md">
+              <div className="p-5 border-2 border-indigo-200 dark:border-indigo-800 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl shadow-md">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <div className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                      <CheckCircle size={20} className="text-green-600" />
+                    <div className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                      <CheckCircle size={20} className="text-green-600 dark:text-green-400" />
                       {selectedMarket.question}
                     </div>
-                    <div className="text-sm text-gray-600 font-mono">
+                    <div className="text-sm text-gray-600 dark:text-gray-400 font-mono">
                       ID: {formatAddress(selectedMarket.condition_id)}
                     </div>
                   </div>
                   <button
                     onClick={() => setSelectedMarket(null)}
-                    className="text-gray-500 hover:text-red-600 ml-2 p-1 hover:bg-white rounded-lg transition"
+                    className="text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 ml-2 p-1 hover:bg-white dark:hover:bg-gray-700 rounded-lg transition"
                   >
                     <XCircle size={20} />
                   </button>
@@ -290,56 +286,56 @@ export default function CreateChallengePage() {
 
           {/* Step 2: Opponent Address */}
           <div className="mb-8">
-            <label className="block text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
               <span className="w-7 h-7 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">2</span>
               Opponent's Address
             </label>
             <div className="relative">
-              <Users className="absolute left-4 top-4 text-gray-400" size={20} />
+              <Users className="absolute left-4 top-4 text-gray-400 dark:text-gray-500" size={20} />
               <input
                 type="text"
                 value={counterparty}
                 onChange={(e) => setCounterparty(e.target.value)}
                 placeholder="0x... (Ethereum address)"
-                className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 bg-white shadow-sm transition-all font-mono"
+                className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 dark:text-white bg-white dark:bg-gray-700 shadow-sm transition-all font-mono placeholder:text-gray-400 dark:placeholder:text-gray-500"
               />
             </div>
           </div>
 
           {/* Step 3: Amounts */}
           <div className="mb-8">
-            <label className="block text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
               <span className="w-7 h-7 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">3</span>
               Stake Amounts
             </label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-2">
+                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">
                   Your Stake (USDC)
                 </label>
                 <div className="relative">
-                  <DollarSign className="absolute left-4 top-4 text-gray-400" size={20} />
+                  <DollarSign className="absolute left-4 top-4 text-gray-400 dark:text-gray-500" size={20} />
                   <input
                     type="number"
                     value={yourAmount}
                     onChange={(e) => setYourAmount(e.target.value)}
                     placeholder="100"
-                    className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 bg-white shadow-sm transition-all text-lg font-semibold"
+                    className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 dark:text-white bg-white dark:bg-gray-700 shadow-sm transition-all text-lg font-semibold placeholder:text-gray-400 dark:placeholder:text-gray-500"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-2">
+                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">
                   Opponent's Stake (USDC)
                 </label>
                 <div className="relative">
-                  <DollarSign className="absolute left-4 top-4 text-gray-400" size={20} />
+                  <DollarSign className="absolute left-4 top-4 text-gray-400 dark:text-gray-500" size={20} />
                   <input
                     type="number"
                     value={counterpartyAmount}
                     onChange={(e) => setCounterpartyAmount(e.target.value)}
                     placeholder="100"
-                    className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 bg-white shadow-sm transition-all text-lg font-semibold"
+                    className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 dark:text-white bg-white dark:bg-gray-700 shadow-sm transition-all text-lg font-semibold placeholder:text-gray-400 dark:placeholder:text-gray-500"
                   />
                 </div>
               </div>
@@ -348,7 +344,7 @@ export default function CreateChallengePage() {
 
           {/* Step 4: Your Position */}
           <div className="mb-8">
-            <label className="block text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
               <span className="w-7 h-7 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">4</span>
               Your Position
             </label>
@@ -359,7 +355,7 @@ export default function CreateChallengePage() {
                 className={`py-6 px-4 rounded-xl border-2 transition-all font-bold text-lg ${
                   yourOutcome === 'yes'
                     ? 'bg-gradient-to-br from-green-500 to-emerald-500 border-green-500 text-white shadow-lg transform scale-105'
-                    : 'bg-white border-gray-200 text-gray-700 hover:border-green-300 hover:shadow-md'
+                    : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-green-300 dark:hover:border-green-700 hover:shadow-md'
                 }`}
               >
                 <div className="text-3xl mb-2">✅</div>
@@ -371,28 +367,28 @@ export default function CreateChallengePage() {
                 className={`py-6 px-4 rounded-xl border-2 transition-all font-bold text-lg ${
                   yourOutcome === 'no'
                     ? 'bg-gradient-to-br from-red-500 to-rose-500 border-red-500 text-white shadow-lg transform scale-105'
-                    : 'bg-white border-gray-200 text-gray-700 hover:border-red-300 hover:shadow-md'
+                    : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-red-300 dark:hover:border-red-700 hover:shadow-md'
                 }`}
               >
                 <div className="text-3xl mb-2">❌</div>
                 NO
               </button>
             </div>
-            <p className="text-sm text-gray-500 mt-3">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-3">
               Your opponent will automatically take the opposite position
             </p>
           </div>
 
           {/* Step 5: Expiry */}
           <div className="mb-8">
-            <label className="block text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
               <span className="w-7 h-7 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">5</span>
               Challenge Expiry
             </label>
             <select
               value={expiryDays}
               onChange={(e) => setExpiryDays(e.target.value)}
-              className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 bg-white shadow-sm transition-all font-semibold"
+              className="w-full px-4 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 dark:text-white bg-white dark:bg-gray-700 shadow-sm transition-all font-semibold"
             >
               <option value="1">1 day</option>
               <option value="3">3 days</option>
@@ -400,38 +396,38 @@ export default function CreateChallengePage() {
               <option value="14">14 days</option>
               <option value="30">30 days</option>
             </select>
-            <p className="text-sm text-gray-500 mt-3">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-3">
               If not accepted within this time, you can cancel and get refunded
             </p>
           </div>
 
           {/* Summary */}
           {selectedMarket && yourAmount && counterpartyAmount && (
-            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-xl p-6 mb-8 shadow-md">
-              <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2 text-lg">
-                <CheckCircle size={24} className="text-indigo-600" />
+            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border-2 border-indigo-200 dark:border-indigo-800 rounded-xl p-6 mb-8 shadow-md">
+              <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2 text-lg">
+                <CheckCircle size={24} className="text-indigo-600 dark:text-indigo-400" />
                 Challenge Summary
               </h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Your position:</span>
+                  <span className="text-gray-600 dark:text-gray-400">Your position:</span>
                   <span className={`font-bold px-3 py-1 rounded-lg ${
-                    yourOutcome === 'yes' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    yourOutcome === 'yes' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
                   }`}>
                     {yourOutcome === 'yes' ? 'Yes' : 'No'} - ${yourAmount} USDC
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Opponent's position:</span>
+                  <span className="text-gray-600 dark:text-gray-400">Opponent's position:</span>
                   <span className={`font-bold px-3 py-1 rounded-lg ${
-                    yourOutcome === 'yes' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+                    yourOutcome === 'yes' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400' : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
                   }`}>
                     {yourOutcome === 'yes' ? 'No' : 'Yes'} - ${counterpartyAmount} USDC
                   </span>
                 </div>
-                <div className="flex justify-between items-center pt-4 border-t-2 border-indigo-200">
-                  <span className="text-gray-900 font-semibold">Winner receives:</span>
-                  <span className="font-bold text-green-600 text-2xl">
+                <div className="flex justify-between items-center pt-4 border-t-2 border-indigo-200 dark:border-indigo-800">
+                  <span className="text-gray-900 dark:text-white font-semibold">Winner receives:</span>
+                  <span className="font-bold text-green-600 dark:text-green-400 text-2xl">
                     ${parseFloat(yourAmount) + parseFloat(counterpartyAmount)} USDC
                   </span>
                 </div>
@@ -458,32 +454,32 @@ export default function CreateChallengePage() {
             )}
           </button>
 
-          <p className="text-xs text-gray-500 text-center mt-4">
+          <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">
             You'll need to approve USDC spending and sign the transaction
           </p>
         </div>
 
         {/* Info Card */}
-        <div className="mt-8 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-6">
-          <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-            <AlertCircle size={20} className="text-indigo-600" />
+        <div className="mt-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+          <h3 className="font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+            <AlertCircle size={20} className="text-indigo-600 dark:text-indigo-400" />
             How It Works
           </h3>
-          <ul className="space-y-2 text-sm text-gray-600">
+          <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <li className="flex gap-2">
-              <span className="text-indigo-600 font-bold">1.</span>
+              <span className="text-indigo-600 dark:text-indigo-400 font-bold">1.</span>
               <span>Both you and your opponent deposit the stake amount into the smart contract</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-indigo-600 font-bold">2.</span>
+              <span className="text-indigo-600 dark:text-indigo-400 font-bold">2.</span>
               <span>The contract monitors the Polymarket for resolution</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-indigo-600 font-bold">3.</span>
+              <span className="text-indigo-600 dark:text-indigo-400 font-bold">3.</span>
               <span>When the market resolves, the winner automatically receives both stakes</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-indigo-600 font-bold">4.</span>
+              <span className="text-indigo-600 dark:text-indigo-400 font-bold">4.</span>
               <span>No trust needed - the smart contract handles everything!</span>
             </li>
           </ul>

@@ -82,12 +82,12 @@ export default function ProfilePage() {
 
   if (!isConnected || !address) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
         <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-12 border border-gray-100">
-            <Users size={64} className="mx-auto text-gray-400 mb-4" />
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Connect Your Wallet</h1>
-            <p className="text-gray-600">Connect your wallet to view your profile</p>
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg p-12 border border-gray-100 dark:border-gray-700">
+            <Users size={64} className="mx-auto text-gray-400 dark:text-gray-600 mb-4" />
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Connect Your Wallet</h1>
+            <p className="text-gray-600 dark:text-gray-400">Connect your wallet to view your profile</p>
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default function ProfilePage() {
     : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-indigo-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900/20">
       <div className="max-w-6xl mx-auto px-4 py-12">
         {/* Profile Header with gradient and pattern */}
         <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl shadow-xl p-8 mb-8">
@@ -158,54 +158,54 @@ export default function ProfilePage() {
         {/* Stats Grid with soft shadows */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatCard
-            icon={<Trophy className="text-yellow-500" size={32} />}
+            icon={<Trophy className="text-yellow-500 dark:text-yellow-400" size={32} />}
             label="Total Wins"
             value={stats.wins}
-            gradient="from-yellow-50 to-amber-50"
-            borderColor="border-yellow-100"
+            gradient="from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30"
+            borderColor="border-yellow-100 dark:border-yellow-800"
           />
           <StatCard
-            icon={<Target className="text-red-500" size={32} />}
+            icon={<Target className="text-red-500 dark:text-red-400" size={32} />}
             label="Total Losses"
             value={stats.losses}
-            gradient="from-red-50 to-rose-50"
-            borderColor="border-red-100"
+            gradient="from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30"
+            borderColor="border-red-100 dark:border-red-800"
           />
           <StatCard
-            icon={<TrendingUp className="text-green-500" size={32} />}
+            icon={<TrendingUp className="text-green-500 dark:text-green-400" size={32} />}
             label="Win Rate"
             value={`${winRate}%`}
-            gradient="from-green-50 to-emerald-50"
-            borderColor="border-green-100"
+            gradient="from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30"
+            borderColor="border-green-100 dark:border-green-800"
           />
         </div>
 
         {/* Performance Section with frosted glass */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Performance</h2>
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700 p-8 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Performance</h2>
           <div className="grid grid-cols-3 gap-6 mb-8">
             <div className="text-center">
-              <div className="text-4xl font-bold text-green-600 mb-1">{stats.wins}</div>
-              <div className="text-sm text-gray-600 font-medium">Wins</div>
+              <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-1">{stats.wins}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Wins</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-gray-400 mb-1">{stats.pending}</div>
-              <div className="text-sm text-gray-600 font-medium">Pending</div>
+              <div className="text-4xl font-bold text-gray-400 dark:text-gray-500 mb-1">{stats.pending}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Pending</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-red-600 mb-1">{stats.losses}</div>
-              <div className="text-sm text-gray-600 font-medium">Losses</div>
+              <div className="text-4xl font-bold text-red-600 dark:text-red-400 mb-1">{stats.losses}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Losses</div>
             </div>
           </div>
           
           {/* Gradient progress bar */}
-          <div className="relative w-full bg-gray-100 rounded-full h-4 shadow-inner overflow-hidden">
+          <div className="relative w-full bg-gray-100 dark:bg-gray-700 rounded-full h-4 shadow-inner overflow-hidden">
             <div
               className="absolute h-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-l-full transition-all shadow-sm"
               style={{ width: `${(stats.wins / stats.totalChallenges) * 100}%` }}
             />
             <div
-              className="absolute h-4 bg-gray-300 transition-all"
+              className="absolute h-4 bg-gray-300 dark:bg-gray-600 transition-all"
               style={{ 
                 left: `${(stats.wins / stats.totalChallenges) * 100}%`,
                 width: `${(stats.pending / stats.totalChallenges) * 100}%` 
@@ -222,13 +222,13 @@ export default function ProfilePage() {
         </div>
 
         {/* Recent Challenges with frosted glass */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Challenges</h2>
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700 p-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Recent Challenges</h2>
           
           {recentChallenges.length === 0 ? (
             <div className="text-center py-12">
-              <Trophy size={48} className="mx-auto text-gray-400 mb-4" />
-              <p className="text-gray-600 mb-6">No challenges yet</p>
+              <Trophy size={48} className="mx-auto text-gray-400 dark:text-gray-600 mb-4" />
+              <p className="text-gray-600 dark:text-gray-400 mb-6">No challenges yet</p>
               <Link
                 href="/create"
                 className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all font-semibold transform hover:-translate-y-0.5"
@@ -261,8 +261,8 @@ function StatCard({ icon, label, value, gradient, borderColor }: {
       <div className="flex items-center justify-between mb-3">
         {icon}
       </div>
-      <div className="text-4xl font-bold text-gray-900 mb-2">{value}</div>
-      <div className="text-sm text-gray-600 font-medium">{label}</div>
+      <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{value}</div>
+      <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">{label}</div>
     </div>
   );
 }
@@ -272,22 +272,22 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
 
   const statusStyles = {
     won: {
-      bg: 'bg-gradient-to-r from-green-50 to-emerald-50',
-      text: 'text-green-700',
-      border: 'border-green-200',
-      badge: 'bg-green-100 text-green-800 border-green-200'
+      bg: 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30',
+      text: 'text-green-700 dark:text-green-400',
+      border: 'border-green-200 dark:border-green-800',
+      badge: 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700'
     },
     lost: {
-      bg: 'bg-gradient-to-r from-red-50 to-rose-50',
-      text: 'text-red-700',
-      border: 'border-red-200',
-      badge: 'bg-red-100 text-red-800 border-red-200'
+      bg: 'bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30',
+      text: 'text-red-700 dark:text-red-400',
+      border: 'border-red-200 dark:border-red-800',
+      badge: 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 border-red-200 dark:border-red-700'
     },
     pending: {
-      bg: 'bg-gradient-to-r from-yellow-50 to-amber-50',
-      text: 'text-yellow-700',
-      border: 'border-yellow-200',
-      badge: 'bg-yellow-100 text-yellow-800 border-yellow-200'
+      bg: 'bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30',
+      text: 'text-yellow-700 dark:text-yellow-400',
+      border: 'border-yellow-200 dark:border-yellow-800',
+      badge: 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700'
     }
   };
 
@@ -307,12 +307,12 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
             >
               {username || formatAddress(challenge.opponent)}
             </Link>
-            <p className="text-sm text-gray-600">{challenge.amount} ETH</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{challenge.amount} ETH</p>
           </div>
         </div>
         
         <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-500">{challenge.createdAt}</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">{challenge.createdAt}</span>
           <span className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${style.badge} shadow-sm`}>
             {challenge.status.toUpperCase()}
           </span>
