@@ -1,0 +1,29 @@
+{
+  "name": "escrow-oracle-backend",
+  "version": "1.0.0",
+  "description": "Oracle service for conditional escrow resolution",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "check": "tsx src/check.ts",
+    "resolve": "tsx src/resolve.ts"
+  },
+  "keywords": [
+    "oracle",
+    "escrow",
+    "polymarket"
+  ],
+  "author": "Your Team",
+  "license": "MIT",
+  "dependencies": {
+    "viem": "^2.21.54",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.5.4"
+  }
+}
