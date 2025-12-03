@@ -240,7 +240,7 @@ export default function CreateChallengePage() {
               ))}
             </div>
           )}
-
+//testing
           {selectedMarket && !searchQuery && (
             <div className="p-4 border border-indigo-200 bg-indigo-50 rounded-lg">
               <div className="flex justify-between items-start">
