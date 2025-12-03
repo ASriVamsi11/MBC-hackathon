@@ -1,6 +1,8 @@
 import { config, validateConfig } from './config';
 import { getOracleAddress } from './services/escrow';
 import { checkAndResolveAll } from './services/oracle';
+import { startEventIndexer } from './workers/event-indexer';
+import { startApiServer } from './api';
 
 /**
  * Main monitoring loop
@@ -39,11 +41,11 @@ async function monitorAndResolve() {
 }
 
 /**
- * Start the oracle service
+ * Start the combined backend service
  */
 async function start() {
-    console.log('\n='.repeat(60));
-    console.log('🤖 ORACLE SERVICE STARTED');
+    console.log('\n' + '='.repeat(60));
+    console.log('🤖 BACKEND SERVICE STARTED');
     console.log('='.repeat(60));
 
     // Validate configuration
@@ -60,11 +62,22 @@ async function start() {
     console.log(`🌐 RPC URL: ${config.rpcUrl}`);
     console.log('\n' + '='.repeat(60) + '\n');
 
-    // Initial check
+    // Start Event Indexer (social features)
+    console.log('📇 Starting Event Indexer...');
+    startEventIndexer(config.checkInterval);
+
+    // Start REST API Server (social features)
+    console.log('🌐 Starting REST API Server...');
+    startApiServer(3001);
+
+    // Initial oracle check
+    console.log('🔍 Starting Oracle Service...\n');
     await monitorAndResolve();
 
-    // Set up interval
+    // Set up oracle interval
     setInterval(monitorAndResolve, config.checkInterval);
+
+    console.log('✅ All services running!\n');
 }
 
 // Handle graceful shutdown

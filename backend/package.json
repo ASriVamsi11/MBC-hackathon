@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "check": "tsx src/check.ts",
-    "resolve": "tsx src/resolve.ts"
+    "resolve": "tsx src/resolve.ts",
+    "index": "tsx src/workers/event-indexer.ts"
   },
   "keywords": [
     "oracle",
@@ -18,12 +19,16 @@
   "author": "Your Team",
   "license": "MIT",
   "dependencies": {
-    "viem": "^2.21.54",
-    "dotenv": "^16.4.5"
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "viem": "^2.41.2"
   },
   "devDependencies": {
-    "@types/node": "^20.14.0",
-    "tsx": "^4.19.1",
-    "typescript": "^5.5.4"
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.25",
+    "@types/node": "^20.19.25",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }
