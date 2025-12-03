@@ -29,7 +29,7 @@ export default function Header() {
               <DollarSign className="text-white" size={24} />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">BetterTogether</h1>
+              <h1 className="text-xl font-bold text-gray-900">BaseBet</h1>
               <p className="text-xs text-gray-500 hidden sm:block">Challenge friends on Polymarket</p>
             </div>
           </Link>
