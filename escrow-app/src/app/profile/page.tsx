@@ -33,7 +33,6 @@ export default function ProfilePage() {
     wins: 0,
     losses: 0,
     pending: 0,
-    totalStaked: '0',
     friendCount: 0,
     joinedDate: 'January 2024'
   });
@@ -45,7 +44,6 @@ export default function ProfilePage() {
     if (!isConnected || !address) return;
 
     // TODO: Fetch real data from contract
-    // Mock data for now
     setStats({
       totalChallenges: 24,
       wins: 15,
@@ -84,10 +82,14 @@ export default function ProfilePage() {
 
   if (!isConnected || !address) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <Users size={64} className="mx-auto text-gray-400 mb-4" />
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Connect Your Wallet</h1>
-        <p className="text-gray-600">Connect your wallet to view your profile</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="max-w-4xl mx-auto px-4 py-20 text-center">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-12 border border-gray-100">
+            <Users size={64} className="mx-auto text-gray-400 mb-4" />
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Connect Your Wallet</h1>
+            <p className="text-gray-600">Connect your wallet to view your profile</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -97,153 +99,170 @@ export default function ProfilePage() {
     : 0;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      {/* Profile Header */}
-      <div className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl shadow-xl p-8 mb-8 text-white">
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-          {/* Avatar */}
-          <div className="w-32 h-32 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-4xl border-4 border-white/30">
-            {(username || formatAddress(address)).slice(0, 2).toUpperCase()}
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-indigo-50/30">
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        {/* Profile Header with gradient and pattern */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl shadow-xl p-8 mb-8">
+          {/* Subtle dot pattern overlay */}
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+            backgroundSize: '40px 40px'
+          }} />
+          
+          <div className="relative flex flex-col md:flex-row items-center md:items-start gap-6">
+            {/* Avatar with glow effect */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-white/30 rounded-full blur-xl" />
+              <div className="relative w-32 h-32 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-4xl border-4 border-white/30 shadow-2xl">
+                {(username || formatAddress(address)).slice(0, 2).toUpperCase()}
+              </div>
+            </div>
 
-          {/* Profile Info */}
-          <div className="flex-1 text-center md:text-left">
-            <div className="flex items-center gap-3 justify-center md:justify-start mb-2">
-              <h1 className="text-4xl font-bold">
-                {username || 'Anonymous User'}
-              </h1>
+            {/* Profile Info */}
+            <div className="flex-1 text-center md:text-left">
+              <div className="flex items-center gap-3 justify-center md:justify-start mb-2">
+                <h1 className="text-4xl font-bold text-white">
+                  {username || 'Anonymous User'}
+                </h1>
+                <Link
+                  href="/settings"
+                  className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition backdrop-blur-sm border border-white/20"
+                  title="Edit Profile"
+                >
+                  <Settings size={20} className="text-white" />
+                </Link>
+              </div>
+              <p className="text-indigo-100 text-lg mb-4 font-mono">
+                {formatAddress(address)}
+              </p>
+              
+              {/* Info badges with glassmorphism */}
+              <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 shadow-lg">
+                  <Users size={20} className="text-white" />
+                  <span className="font-semibold text-white">{stats.friendCount} Friends</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 shadow-lg">
+                  <Calendar size={20} className="text-white" />
+                  <span className="font-semibold text-white">Joined {stats.joinedDate}</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 shadow-lg">
+                  <Trophy size={20} className="text-white" />
+                  <span className="font-semibold text-white">{stats.totalChallenges} Challenges</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Grid with soft shadows */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <StatCard
+            icon={<Trophy className="text-yellow-500" size={32} />}
+            label="Total Wins"
+            value={stats.wins}
+            gradient="from-yellow-50 to-amber-50"
+            borderColor="border-yellow-100"
+          />
+          <StatCard
+            icon={<Target className="text-red-500" size={32} />}
+            label="Total Losses"
+            value={stats.losses}
+            gradient="from-red-50 to-rose-50"
+            borderColor="border-red-100"
+          />
+          <StatCard
+            icon={<TrendingUp className="text-green-500" size={32} />}
+            label="Win Rate"
+            value={`${winRate}%`}
+            gradient="from-green-50 to-emerald-50"
+            borderColor="border-green-100"
+          />
+        </div>
+
+        {/* Performance Section with frosted glass */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-8 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Performance</h2>
+          <div className="grid grid-cols-3 gap-6 mb-8">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-green-600 mb-1">{stats.wins}</div>
+              <div className="text-sm text-gray-600 font-medium">Wins</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-gray-400 mb-1">{stats.pending}</div>
+              <div className="text-sm text-gray-600 font-medium">Pending</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-red-600 mb-1">{stats.losses}</div>
+              <div className="text-sm text-gray-600 font-medium">Losses</div>
+            </div>
+          </div>
+          
+          {/* Gradient progress bar */}
+          <div className="relative w-full bg-gray-100 rounded-full h-4 shadow-inner overflow-hidden">
+            <div
+              className="absolute h-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-l-full transition-all shadow-sm"
+              style={{ width: `${(stats.wins / stats.totalChallenges) * 100}%` }}
+            />
+            <div
+              className="absolute h-4 bg-gray-300 transition-all"
+              style={{ 
+                left: `${(stats.wins / stats.totalChallenges) * 100}%`,
+                width: `${(stats.pending / stats.totalChallenges) * 100}%` 
+              }}
+            />
+            <div
+              className="absolute h-4 bg-gradient-to-r from-red-500 to-rose-500 rounded-r-full transition-all shadow-sm"
+              style={{ 
+                left: `${((stats.wins + stats.pending) / stats.totalChallenges) * 100}%`,
+                width: `${(stats.losses / stats.totalChallenges) * 100}%` 
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Recent Challenges with frosted glass */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 p-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Challenges</h2>
+          
+          {recentChallenges.length === 0 ? (
+            <div className="text-center py-12">
+              <Trophy size={48} className="mx-auto text-gray-400 mb-4" />
+              <p className="text-gray-600 mb-6">No challenges yet</p>
               <Link
-                href="/settings"
-                className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition"
-                title="Edit Profile"
+                href="/create"
+                className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all font-semibold transform hover:-translate-y-0.5"
               >
-                <Settings size={20} />
+                Create Your First Challenge
               </Link>
             </div>
-            <p className="text-indigo-100 text-lg mb-4 font-mono">
-              {formatAddress(address)}
-            </p>
-            
-            <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
-                <Users size={20} />
-                <span className="font-semibold">{stats.friendCount} Friends</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
-                <Calendar size={20} />
-                <span className="font-semibold">Joined {stats.joinedDate}</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
-                <Trophy size={20} />
-                <span className="font-semibold">{stats.totalChallenges} Challenges</span>
-              </div>
+          ) : (
+            <div className="space-y-4">
+              {recentChallenges.map((challenge) => (
+                <ChallengeCard key={challenge.id} challenge={challenge} />
+              ))}
             </div>
-          </div>
+          )}
         </div>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <StatCard
-          icon={<Trophy className="text-yellow-600" size={32} />}
-          label="Total Wins"
-          value={stats.wins}
-          bgColor="bg-yellow-50"
-        />
-        <StatCard
-          icon={<Target className="text-red-600" size={32} />}
-          label="Total Losses"
-          value={stats.losses}
-          bgColor="bg-red-50"
-        />
-        <StatCard
-          icon={<TrendingUp className="text-green-600" size={32} />}
-          label="Win Rate"
-          value={`${winRate}%`}
-          bgColor="bg-green-50"
-        />
-      </div>
-
-      {/* Win Rate Visualization */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Performance</h2>
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-green-600">{stats.wins}</div>
-            <div className="text-sm text-gray-600">Wins</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-gray-400">{stats.pending}</div>
-            <div className="text-sm text-gray-600">Pending</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-red-600">{stats.losses}</div>
-            <div className="text-sm text-gray-600">Losses</div>
-          </div>
-        </div>
-        
-        <div className="relative w-full bg-gray-200 rounded-full h-4">
-          <div
-            className="absolute h-4 bg-green-600 rounded-l-full transition-all"
-            style={{ width: `${(stats.wins / stats.totalChallenges) * 100}%` }}
-          />
-          <div
-            className="absolute h-4 bg-gray-400 transition-all"
-            style={{ 
-              left: `${(stats.wins / stats.totalChallenges) * 100}%`,
-              width: `${(stats.pending / stats.totalChallenges) * 100}%` 
-            }}
-          />
-          <div
-            className="absolute h-4 bg-red-600 rounded-r-full transition-all"
-            style={{ 
-              left: `${((stats.wins + stats.pending) / stats.totalChallenges) * 100}%`,
-              width: `${(stats.losses / stats.totalChallenges) * 100}%` 
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Recent Challenges */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Recent Challenges</h2>
-        
-        {recentChallenges.length === 0 ? (
-          <div className="text-center py-12">
-            <Trophy size={48} className="mx-auto text-gray-400 mb-4" />
-            <p className="text-gray-600">No challenges yet</p>
-            <Link
-              href="/create"
-              className="inline-block mt-4 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold"
-            >
-              Create Your First Challenge
-            </Link>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {recentChallenges.map((challenge) => (
-              <ChallengeCard key={challenge.id} challenge={challenge} />
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );
 }
 
-function StatCard({ icon, label, value, bgColor }: { 
+function StatCard({ icon, label, value, gradient, borderColor }: { 
   icon: React.ReactNode; 
   label: string; 
   value: string | number; 
-  bgColor: string;
+  gradient: string;
+  borderColor: string;
 }) {
   return (
-    <div className={`${bgColor} rounded-xl p-6 border border-gray-200`}>
-      <div className="flex items-center justify-between mb-2">
+    <div className={`bg-gradient-to-br ${gradient} rounded-2xl p-6 border ${borderColor} shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1`}>
+      <div className="flex items-center justify-between mb-3">
         {icon}
       </div>
-      <div className="text-3xl font-bold text-gray-900 mb-1">{value}</div>
-      <div className="text-sm text-gray-600">{label}</div>
+      <div className="text-4xl font-bold text-gray-900 mb-2">{value}</div>
+      <div className="text-sm text-gray-600 font-medium">{label}</div>
     </div>
   );
 }
@@ -251,41 +270,53 @@ function StatCard({ icon, label, value, bgColor }: {
 function ChallengeCard({ challenge }: { challenge: Challenge }) {
   const { username } = useUsername(challenge.opponent);
 
-  const statusColors = {
-    won: 'bg-green-100 text-green-800 border-green-200',
-    lost: 'bg-red-100 text-red-800 border-red-200',
-    pending: 'bg-yellow-100 text-yellow-800 border-yellow-200'
+  const statusStyles = {
+    won: {
+      bg: 'bg-gradient-to-r from-green-50 to-emerald-50',
+      text: 'text-green-700',
+      border: 'border-green-200',
+      badge: 'bg-green-100 text-green-800 border-green-200'
+    },
+    lost: {
+      bg: 'bg-gradient-to-r from-red-50 to-rose-50',
+      text: 'text-red-700',
+      border: 'border-red-200',
+      badge: 'bg-red-100 text-red-800 border-red-200'
+    },
+    pending: {
+      bg: 'bg-gradient-to-r from-yellow-50 to-amber-50',
+      text: 'text-yellow-700',
+      border: 'border-yellow-200',
+      badge: 'bg-yellow-100 text-yellow-800 border-yellow-200'
+    }
   };
 
-  const statusIcons = {
-    won: <Trophy size={16} />,
-    lost: <Target size={16} />,
-    pending: <Calendar size={16} />
-  };
+  const style = statusStyles[challenge.status];
 
   return (
-    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-          {(username || formatAddress(challenge.opponent)).slice(0, 2).toUpperCase()}
+    <div className={`${style.bg} rounded-xl p-5 border ${style.border} hover:shadow-md transition-all`}>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+            {(username || formatAddress(challenge.opponent)).slice(0, 2).toUpperCase()}
+          </div>
+          <div>
+            <Link 
+              href={`/profile/${challenge.opponent}`}
+              className={`font-semibold ${style.text} hover:opacity-80 transition`}
+            >
+              {username || formatAddress(challenge.opponent)}
+            </Link>
+            <p className="text-sm text-gray-600">{challenge.amount} ETH</p>
+          </div>
         </div>
-        <div>
-          <Link 
-            href={`/profile/${challenge.opponent}`}
-            className="font-semibold text-gray-900 hover:text-indigo-600 transition"
-          >
-            {username || formatAddress(challenge.opponent)}
-          </Link>
-          <p className="text-sm text-gray-500">{challenge.amount} ETH</p>
+        
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-500">{challenge.createdAt}</span>
+          <span className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${style.badge} shadow-sm`}>
+            {challenge.status.toUpperCase()}
+          </span>
         </div>
-      </div>
-      
-      <div className="flex items-center gap-3">
-        <span className="text-sm text-gray-500">{challenge.createdAt}</span>
-        <span className={`px-3 py-1 rounded-full text-xs font-semibold border flex items-center gap-1 ${statusColors[challenge.status]}`}>
-          {statusIcons[challenge.status]}
-          {challenge.status.toUpperCase()}
-        </span>
       </div>
     </div>
   );

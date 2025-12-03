@@ -21,26 +21,26 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <header className="bg-white/80 backdrop-blur-md shadow-lg border-b border-gray-100/50 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
-            <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-all">
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
               <DollarSign className="text-white" size={24} />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">BaseBet</h1>
+              <h1 className="text-xl font-bold text-gray-900">Base Bets</h1>
               <p className="text-xs text-gray-500 hidden sm:block">Challenge friends on Polymarket</p>
             </div>
           </Link>
 
           <div className="flex items-center gap-4">
             {!mounted ? (
-              <div className="w-24 h-10 bg-gray-200 rounded-lg animate-pulse" />
+              <div className="w-24 h-10 bg-gray-200 rounded-xl animate-pulse" />
             ) : !isConnected ? (
               <button
                 onClick={() => connect({ connector: connectors[0] })}
-                className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+                className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-5 py-2.5 rounded-xl hover:shadow-lg transition-all font-semibold transform hover:-translate-y-0.5"
               >
                 <Wallet size={20} />
                 <span className="hidden sm:inline">Connect</span>
@@ -48,13 +48,13 @@ export default function Header() {
             ) : (
               <div className="flex items-center gap-3">
                 <Link href="/profile" className="hidden sm:block text-right hover:opacity-80 transition">
-                  <div className="text-sm font-medium text-gray-900">
+                  <div className="text-sm font-semibold text-gray-900">
                     {username || formatAddress(address!)}
                   </div>
                 </Link>
                 <button
                   onClick={() => disconnect()}
-                  className="hidden sm:block px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm transition"
+                  className="hidden sm:block px-4 py-2 border border-gray-200 rounded-xl hover:bg-gray-50 hover:shadow-md text-sm transition-all font-medium"
                 >
                   Disconnect
                 </button>
@@ -63,7 +63,7 @@ export default function Header() {
                 <div className="hidden sm:block relative">
                   <button
                     onClick={() => setDesktopMenuOpen(!desktopMenuOpen)}
-                    className="p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+                    className="p-2.5 text-gray-700 hover:bg-gray-100 rounded-xl transition-all hover:shadow-md"
                   >
                     <Menu size={24} />
                   </button>
@@ -75,10 +75,10 @@ export default function Header() {
                         className="fixed inset-0 z-10" 
                         onClick={() => setDesktopMenuOpen(false)}
                       />
-                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20">
+                      <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-gray-100/50 py-2 z-20">
                         <Link
                           href="/"
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50/80 transition text-gray-700 rounded-lg mx-2"
                           onClick={() => setDesktopMenuOpen(false)}
                         >
                           <Home size={20} />
@@ -86,7 +86,7 @@ export default function Header() {
                         </Link>
                         <Link
                           href="/create"
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50/80 transition text-gray-700 rounded-lg mx-2"
                           onClick={() => setDesktopMenuOpen(false)}
                         >
                           <Zap size={20} />
@@ -94,16 +94,16 @@ export default function Header() {
                         </Link>
                         <Link
                           href="/my-escrows"
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50/80 transition text-gray-700 rounded-lg mx-2"
                           onClick={() => setDesktopMenuOpen(false)}
                         >
                           <Trophy size={20} />
                           <span className="font-medium">My Challenges</span>
                         </Link>
-                        <div className="border-t border-gray-200 my-2" />
+                        <div className="border-t border-gray-100 my-2" />
                         <Link
                           href="/leaderboard"
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50/80 transition text-gray-700 rounded-lg mx-2"
                           onClick={() => setDesktopMenuOpen(false)}
                         >
                           <Trophy size={20} className="text-yellow-500" />
@@ -111,7 +111,7 @@ export default function Header() {
                         </Link>
                         <Link
                           href="/friends"
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50/80 transition text-gray-700 rounded-lg mx-2"
                           onClick={() => setDesktopMenuOpen(false)}
                         >
                           <Users size={20} />
@@ -119,16 +119,16 @@ export default function Header() {
                         </Link>
                         <Link
                           href="/search"
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50/80 transition text-gray-700 rounded-lg mx-2"
                           onClick={() => setDesktopMenuOpen(false)}
                         >
                           <Search size={20} />
                           <span className="font-medium">Search Users</span>
                         </Link>
-                        <div className="border-t border-gray-200 my-2" />
+                        <div className="border-t border-gray-100 my-2" />
                         <Link
                           href="/profile"
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50/80 transition text-gray-700 rounded-lg mx-2"
                           onClick={() => setDesktopMenuOpen(false)}
                         >
                           <User size={20} className="text-indigo-600" />
@@ -144,7 +144,7 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="sm:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+              className="sm:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-xl transition"
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -153,46 +153,46 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && mounted && (
-          <div className="sm:hidden mt-4 pb-4 border-t border-gray-200 pt-4">
-            <nav className="flex flex-col gap-3">
-              <Link href="/" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+          <div className="sm:hidden mt-4 pb-4 border-t border-gray-100 pt-4 bg-white/50 backdrop-blur-sm rounded-xl px-3">
+            <nav className="flex flex-col gap-2">
+              <Link href="/" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50/50 font-medium py-3 px-3 transition rounded-lg" onClick={() => setMobileMenuOpen(false)}>
                 <Home size={20} />
                 Home
               </Link>
-              <Link href="/create" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+              <Link href="/create" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50/50 font-medium py-3 px-3 transition rounded-lg" onClick={() => setMobileMenuOpen(false)}>
                 <Zap size={20} />
                 Create Challenge
               </Link>
               {isConnected && (
                 <>
-                  <Link href="/my-escrows" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href="/my-escrows" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50/50 font-medium py-3 px-3 transition rounded-lg" onClick={() => setMobileMenuOpen(false)}>
                     <Trophy size={20} />
                     My Challenges
                   </Link>
-                  <div className="border-t border-gray-200 my-2" />
-                  <Link href="/leaderboard" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                  <div className="border-t border-gray-100 my-2" />
+                  <Link href="/leaderboard" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50/50 font-medium py-3 px-3 transition rounded-lg" onClick={() => setMobileMenuOpen(false)}>
                     <Trophy size={20} className="text-yellow-500" />
                     Leaderboard
                   </Link>
-                  <Link href="/friends" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href="/friends" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50/50 font-medium py-3 px-3 transition rounded-lg" onClick={() => setMobileMenuOpen(false)}>
                     <Users size={20} />
                     Friends
                   </Link>
-                  <Link href="/search" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href="/search" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50/50 font-medium py-3 px-3 transition rounded-lg" onClick={() => setMobileMenuOpen(false)}>
                     <Search size={20} />
                     Search Users
                   </Link>
-                  <Link href="/profile" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 font-medium py-2 transition" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href="/profile" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50/50 font-medium py-3 px-3 transition rounded-lg" onClick={() => setMobileMenuOpen(false)}>
                     <User size={20} />
                     Profile
                   </Link>
-                  <div className="border-t border-gray-200 my-2" />
+                  <div className="border-t border-gray-100 my-2" />
                   <button
                     onClick={() => {
                       disconnect();
                       setMobileMenuOpen(false);
                     }}
-                    className="text-left text-red-600 hover:text-red-700 font-medium py-2 transition flex items-center gap-3"
+                    className="text-left text-red-600 hover:text-red-700 hover:bg-red-50/50 font-medium py-3 px-3 transition flex items-center gap-3 rounded-lg"
                   >
                     <Wallet size={20} />
                     Disconnect
