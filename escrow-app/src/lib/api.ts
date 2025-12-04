@@ -8,21 +8,30 @@ async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> 
     const url = `${API_URL}${endpoint}`;
 
     try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
         const response = await fetch(url, {
             ...options,
+            signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json',
                 ...options?.headers,
             },
         });
 
+        clearTimeout(timeoutId);
+
         if (!response.ok) {
-            throw new Error(`API Error: ${response.statusText}`);
+            throw new Error(`API Error: ${response.status} ${response.statusText}`);
         }
 
         return await response.json();
-    } catch (error) {
-        console.error('API call failed:', error);
+    } catch (error: any) {
+        console.error('API call failed:', url, error);
+        if (error.name === 'AbortError') {
+            throw new Error('Request timeout - Backend might not be running');
+        }
         throw error;
     }
 }

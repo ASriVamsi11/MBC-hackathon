@@ -1,5 +1,7 @@
 'use client';
 
+import ActivityFeed from '@/components/ActivityFeed';
+import StatsWidget from '@/components/StatsWidget';
 import Link from 'next/link';
 import { Trophy, Zap, Shield, Users, TrendingUp, Target, Sparkles } from 'lucide-react';
 import { useAccount } from 'wagmi';
@@ -16,7 +18,7 @@ export default function HomePage() {
           backgroundImage: 'radial-gradient(circle at 2px 2px, rgb(99, 102, 241) 1px, transparent 0)',
           backgroundSize: '48px 48px'
         }} />
-        
+
         <div className="relative max-w-6xl mx-auto px-4 py-20 md:py-32">
           <div className="text-center">
             {/* Badge */}
@@ -32,7 +34,7 @@ export default function HomePage() {
                 Polymarket
               </span>
             </h1>
-            
+
             <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto">
               Create conditional escrows, challenge your friends on prediction markets, and let the smart contract decide the winner
             </p>
@@ -47,7 +49,7 @@ export default function HomePage() {
                 Create Challenge
                 <div className="group-hover:translate-x-1 transition-transform">→</div>
               </Link>
-              
+
               {isConnected && (
                 <Link
                   href="/my-escrows"
@@ -60,7 +62,8 @@ export default function HomePage() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 max-w-3xl mx-auto">
+            <StatsWidget />
+            {/* <div className="grid grid-cols-3 gap-6 max-w-3xl mx-auto">
               <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
                 <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
                   500+
@@ -79,7 +82,7 @@ export default function HomePage() {
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Active Users</div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
@@ -163,6 +166,12 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Activity Feed */}
+      {/* <div className="mt-12">
+        <h2 className="text-2xl font-bold mb-6">Recent Activity</h2>
+        <ActivityFeed limit={10} />
+      </div> */}
+
       {/* CTA Section */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4">
@@ -172,7 +181,7 @@ export default function HomePage() {
               backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
               backgroundSize: '40px 40px'
             }} />
-            
+
             <div className="relative text-center text-white">
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
                 Ready to Challenge?
@@ -208,12 +217,12 @@ function StepCard({ number, icon, title, description, gradient }: {
       <div className={`absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br ${gradient} rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg`}>
         {number}
       </div>
-      
+
       {/* Icon */}
       <div className={`w-16 h-16 bg-gradient-to-br ${gradient} rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg`}>
         {icon}
       </div>
-      
+
       <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{title}</h3>
       <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
     </div>
