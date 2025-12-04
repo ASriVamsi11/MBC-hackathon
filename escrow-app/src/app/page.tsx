@@ -1,151 +1,236 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Zap, TrendingUp, Users, ArrowRight } from 'lucide-react';
-import ActivityFeed from '@/components/ActivityFeed';
+import { Trophy, Zap, Shield, Users, TrendingUp, Target, Sparkles } from 'lucide-react';
 import { useAccount } from 'wagmi';
 
 export default function HomePage() {
   const { isConnected } = useAccount();
-  const [stats, setStats] = useState({
-    totalChallenges: 0,
-    totalVolume: 0,
-    activeUsers: 0,
-  });
-
-  // TODO: Fetch real stats from contract events
-  useEffect(() => {
-    setStats({
-      totalChallenges: 127,
-      totalVolume: 45230,
-      activeUsers: 89,
-    });
-  }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900/20">
       {/* Hero Section */}
-      <div className="text-center mb-16">
-        <h1 className="text-5xl font-bold text-gray-900 mb-4">
-          Challenge Friends on Polymarket
-        </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Create conditional escrows backed by real prediction markets. Winner takes all when the outcome resolves.
-        </p>
+      <section className="relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5 dark:opacity-10" style={{
+          backgroundImage: 'radial-gradient(circle at 2px 2px, rgb(99, 102, 241) 1px, transparent 0)',
+          backgroundSize: '48px 48px'
+        }} />
         
-        <div className="flex gap-4 justify-center flex-wrap">
-          <Link
-            href="/create"
-            className="bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition-colors font-semibold text-lg flex items-center gap-2"
-          >
-            Create Challenge
-            <ArrowRight size={20} />
-          </Link>
-          <Link
-            href="/my-escrows"
-            className="bg-white text-indigo-600 px-8 py-4 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-lg border-2 border-indigo-600"
-          >
-            My Challenges
-          </Link>
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-3 bg-indigo-100 rounded-lg">
-              <Zap className="text-indigo-600" size={24} />
+        <div className="relative max-w-6xl mx-auto px-4 py-20 md:py-32">
+          <div className="text-center">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-indigo-100 dark:border-indigo-800 rounded-full px-4 py-2 mb-8 shadow-lg">
+              <Sparkles size={16} className="text-indigo-600 dark:text-indigo-400" />
+              <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">Challenge Friends • Win Big</span>
             </div>
-            <div>
-              <div className="text-3xl font-bold text-gray-900">{stats.totalChallenges}</div>
-              <div className="text-sm text-gray-600">Total Challenges</div>
+
+            {/* Main Heading */}
+            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+              Challenge Friends on{' '}
+              <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Polymarket
+              </span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto">
+              Create conditional escrows, challenge your friends on prediction markets, and let the smart contract decide the winner
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+              <Link
+                href="/create"
+                className="group bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-xl hover:shadow-2xl transition-all font-bold text-lg flex items-center justify-center gap-2 transform hover:-translate-y-1"
+              >
+                <Zap size={24} />
+                Create Challenge
+                <div className="group-hover:translate-x-1 transition-transform">→</div>
+              </Link>
+              
+              {isConnected && (
+                <Link
+                  href="/my-escrows"
+                  className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-2 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white px-8 py-4 rounded-xl hover:shadow-xl transition-all font-bold text-lg flex items-center justify-center gap-2 hover:border-indigo-300 dark:hover:border-indigo-700 transform hover:-translate-y-1"
+                >
+                  <Trophy size={24} />
+                  My Challenges
+                </Link>
+              )}
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-6 max-w-3xl mx-auto">
+              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+                <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                  500+
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Challenges Created</div>
+              </div>
+              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+                <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                  $50K+
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Total Staked</div>
+              </div>
+              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+                <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                  1,200+
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Active Users</div>
+              </div>
             </div>
           </div>
         </div>
-
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <TrendingUp className="text-green-600" size={24} />
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-gray-900">${stats.totalVolume.toLocaleString()}</div>
-              <div className="text-sm text-gray-600">Total Volume</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <Users className="text-purple-600" size={24} />
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-gray-900">{stats.activeUsers}</div>
-              <div className="text-sm text-gray-600">Active Users</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </section>
 
       {/* How It Works */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-16">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">How It Works</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <div className="w-12 h-12 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-xl font-bold mb-4">
-              1
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Choose a Market</h3>
-            <p className="text-gray-600">
-              Select any active Polymarket prediction - sports, politics, crypto, or any real-world event.
+      <section className="py-20 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800/50">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              How It Works
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Challenge friends in three simple steps
             </p>
           </div>
 
-          <div>
-            <div className="w-12 h-12 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-xl font-bold mb-4">
-              2
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Challenge a Friend</h3>
-            <p className="text-gray-600">
-              Set your position and amounts, then share the challenge link with your friend to accept.
-            </p>
-          </div>
-
-          <div>
-            <div className="w-12 h-12 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-xl font-bold mb-4">
-              3
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Winner Takes All</h3>
-            <p className="text-gray-600">
-              When the market resolves, the winner automatically receives all funds. No disputes, no fees.
-            </p>
+          <div className="grid md:grid-cols-3 gap-8">
+            <StepCard
+              number={1}
+              icon={<Target size={32} />}
+              title="Pick a Market"
+              description="Choose any Polymarket prediction market you want to challenge your friend on"
+              gradient="from-indigo-500 to-purple-500"
+            />
+            <StepCard
+              number={2}
+              icon={<Users size={32} />}
+              title="Create Challenge"
+              description="Set your stake amount and invite your friend. Both deposit funds into the smart contract"
+              gradient="from-purple-500 to-pink-500"
+            />
+            <StepCard
+              number={3}
+              icon={<Trophy size={32} />}
+              title="Winner Takes All"
+              description="When the market resolves, the smart contract automatically sends funds to the winner"
+              gradient="from-pink-500 to-rose-500"
+            />
           </div>
         </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-20">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              Why Base Bets?
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              The most trusted way to challenge friends on prediction markets
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <FeatureCard
+              icon={<Shield size={40} className="text-indigo-600 dark:text-indigo-400" />}
+              title="Trustless & Secure"
+              description="Smart contracts eliminate the need for trust. Funds are held securely on-chain and automatically distributed to the winner."
+              bgGradient="from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20"
+            />
+            <FeatureCard
+              icon={<Zap size={40} className="text-purple-600 dark:text-purple-400" />}
+              title="Instant Settlement"
+              description="No waiting for manual payouts. As soon as the Polymarket resolves, winners automatically receive their funds."
+              bgGradient="from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20"
+            />
+            <FeatureCard
+              icon={<Users size={40} className="text-green-600 dark:text-green-400" />}
+              title="Track Your Friends"
+              description="See your win/loss record against friends, view leaderboards, and build your reputation as a top challenger."
+              bgGradient="from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20"
+            />
+            <FeatureCard
+              icon={<TrendingUp size={40} className="text-yellow-600 dark:text-yellow-400" />}
+              title="Any Market Size"
+              description="Challenge friends on any Polymarket, from elections to sports to crypto. Set any stake amount you're comfortable with."
+              bgGradient="from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl p-12">
+            {/* Pattern overlay */}
+            <div className="absolute inset-0 opacity-10" style={{
+              backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+              backgroundSize: '40px 40px'
+            }} />
+            
+            <div className="relative text-center text-white">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                Ready to Challenge?
+              </h2>
+              <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
+                Create your first challenge now and see who really knows their predictions
+              </p>
+              <Link
+                href="/create"
+                className="inline-flex items-center gap-3 bg-white text-indigo-600 px-8 py-4 rounded-xl hover:shadow-2xl transition-all font-bold text-lg transform hover:-translate-y-1"
+              >
+                <Zap size={24} />
+                Create Your First Challenge
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function StepCard({ number, icon, title, description, gradient }: {
+  number: number;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  gradient: string;
+}) {
+  return (
+    <div className="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 hover:shadow-2xl transition-all transform hover:-translate-y-2">
+      {/* Number Badge */}
+      <div className={`absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br ${gradient} rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg`}>
+        {number}
       </div>
-
-      {/* Activity Feed */}
-      <div className="mb-16">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Recent Activity</h2>
-        </div>
-        <ActivityFeed limit={10} />
+      
+      {/* Icon */}
+      <div className={`w-16 h-16 bg-gradient-to-br ${gradient} rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg`}>
+        {icon}
       </div>
+      
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{title}</h3>
+      <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
+    </div>
+  );
+}
 
-      {/* CTA */}
-      {!isConnected && (
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Ready to Start?</h2>
-          <p className="text-lg mb-6 opacity-90">
-            Connect your wallet to create challenges and compete with friends
-          </p>
-          <Link href="/create" className="inline-block bg-white text-indigo-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition-colors font-semibold text-lg">
-            Get Started
-          </Link>
-        </div>
-      )}
+function FeatureCard({ icon, title, description, bgGradient }: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  bgGradient: string;
+}) {
+  return (
+    <div className={`bg-gradient-to-br ${bgGradient} rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8 hover:shadow-xl transition-all transform hover:-translate-y-1`}>
+      <div className="mb-4">{icon}</div>
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{title}</h3>
+      <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
     </div>
   );
 }
