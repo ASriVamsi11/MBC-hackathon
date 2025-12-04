@@ -9,7 +9,7 @@ export function useContract() {
 
   const approveUSDC = async (amount: string) => {
     const amountBigInt = parseUSDC(amount);
-    
+
     const hash = await writeContractAsync({
       address: USDC_ADDRESS as `0x${string}`,
       abi: USDC_ABI,

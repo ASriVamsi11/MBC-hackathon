@@ -18,13 +18,13 @@ export default function CreateChallengePage() {
   const [markets, setMarkets] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [selectedMarket, setSelectedMarket] = useState<any>(null);
-  
+
   const [counterparty, setCounterparty] = useState('');
   const [yourAmount, setYourAmount] = useState('');
   const [counterpartyAmount, setCounterpartyAmount] = useState('');
   const [yourOutcome, setYourOutcome] = useState<'yes' | 'no'>('yes');
   const [expiryDays, setExpiryDays] = useState('7');
-  
+
   const [isCreating, setIsCreating] = useState(false);
   const [createdEscrowId, setCreatedEscrowId] = useState<number | null>(null);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
@@ -41,14 +41,43 @@ export default function CreateChallengePage() {
       }
 
       setIsSearching(true);
-      const results = await fetchPolymarketMarkets(searchQuery);
-      setMarkets(results);
-      setIsSearching(false);
+      try {
+        console.log('Searching for:', searchQuery);
+        const results = await fetchPolymarketMarkets(searchQuery);
+        console.log('Search results:', results);
+        setMarkets(results || []); // Handle null/undefined
+
+        if (!results || results.length === 0) {
+          showNotification('No markets found. Try a different search term.', 'info');
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+        showNotification('Failed to search markets. Please try again.', 'error');
+        setMarkets([]);
+      } finally {
+        setIsSearching(false);
+      }
     };
 
     const debounce = setTimeout(searchMarkets, 500);
     return () => clearTimeout(debounce);
   }, [searchQuery]);
+  // useEffect(() => {
+  //   const searchMarkets = async () => {
+  //     if (searchQuery.length < 3) {
+  //       setMarkets([]);
+  //       return;
+  //     }
+
+  //     setIsSearching(true);
+  //     const results = await fetchPolymarketMarkets(searchQuery);
+  //     setMarkets(results);
+  //     setIsSearching(false);
+  //   };
+
+  //   const debounce = setTimeout(searchMarkets, 500);
+  //   return () => clearTimeout(debounce);
+  // }, [searchQuery]);
 
   const showNotification = (message: string, type: 'success' | 'error' | 'info') => {
     setNotification({ message, type });
@@ -87,7 +116,7 @@ export default function CreateChallengePage() {
     }
   };
 
-  const shareLink = createdEscrowId !== null 
+  const shareLink = createdEscrowId !== null
     ? `${typeof window !== 'undefined' ? window.location.origin : ''}/challenge/${createdEscrowId}`
     : '';
 
@@ -187,11 +216,10 @@ export default function CreateChallengePage() {
       <div className="max-w-3xl mx-auto px-4 py-12">
         {/* Notification */}
         {notification && (
-          <div className={`fixed top-24 right-4 z-50 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 backdrop-blur-md border transition-all ${
-            notification.type === 'success' ? 'bg-green-500/95 text-white border-green-400' :
-            notification.type === 'error' ? 'bg-red-500/95 text-white border-red-400' :
-            'bg-blue-500/95 text-white border-blue-400'
-          }`}>
+          <div className={`fixed top-24 right-4 z-50 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 backdrop-blur-md border transition-all ${notification.type === 'success' ? 'bg-green-500/95 text-white border-green-400' :
+              notification.type === 'error' ? 'bg-red-500/95 text-white border-red-400' :
+                'bg-blue-500/95 text-white border-blue-400'
+            }`}>
             {notification.type === 'success' && <CheckCircle size={20} />}
             {notification.type === 'error' && <XCircle size={20} />}
             {notification.type === 'info' && <Loader size={20} className="animate-spin" />}
@@ -205,7 +233,7 @@ export default function CreateChallengePage() {
             backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
             backgroundSize: '40px 40px'
           }} />
-          
+
           <div className="relative text-center">
             <Zap size={48} className="mx-auto text-white mb-4 drop-shadow-lg" />
             <h1 className="text-4xl font-bold text-white mb-2">Create Challenge</h1>
@@ -352,11 +380,10 @@ export default function CreateChallengePage() {
               <button
                 type="button"
                 onClick={() => setYourOutcome('yes')}
-                className={`py-6 px-4 rounded-xl border-2 transition-all font-bold text-lg ${
-                  yourOutcome === 'yes'
+                className={`py-6 px-4 rounded-xl border-2 transition-all font-bold text-lg ${yourOutcome === 'yes'
                     ? 'bg-gradient-to-br from-green-500 to-emerald-500 border-green-500 text-white shadow-lg transform scale-105'
                     : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-green-300 dark:hover:border-green-700 hover:shadow-md'
-                }`}
+                  }`}
               >
                 <div className="text-3xl mb-2">✅</div>
                 YES
@@ -364,11 +391,10 @@ export default function CreateChallengePage() {
               <button
                 type="button"
                 onClick={() => setYourOutcome('no')}
-                className={`py-6 px-4 rounded-xl border-2 transition-all font-bold text-lg ${
-                  yourOutcome === 'no'
+                className={`py-6 px-4 rounded-xl border-2 transition-all font-bold text-lg ${yourOutcome === 'no'
                     ? 'bg-gradient-to-br from-red-500 to-rose-500 border-red-500 text-white shadow-lg transform scale-105'
                     : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-red-300 dark:hover:border-red-700 hover:shadow-md'
-                }`}
+                  }`}
               >
                 <div className="text-3xl mb-2">❌</div>
                 NO
@@ -411,17 +437,15 @@ export default function CreateChallengePage() {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between items-center py-2">
                   <span className="text-gray-600 dark:text-gray-400">Your position:</span>
-                  <span className={`font-bold px-3 py-1 rounded-lg ${
-                    yourOutcome === 'yes' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
-                  }`}>
+                  <span className={`font-bold px-3 py-1 rounded-lg ${yourOutcome === 'yes' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
+                    }`}>
                     {yourOutcome === 'yes' ? 'Yes' : 'No'} - ${yourAmount} USDC
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <span className="text-gray-600 dark:text-gray-400">Opponent's position:</span>
-                  <span className={`font-bold px-3 py-1 rounded-lg ${
-                    yourOutcome === 'yes' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400' : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                  }`}>
+                  <span className={`font-bold px-3 py-1 rounded-lg ${yourOutcome === 'yes' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400' : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                    }`}>
                     {yourOutcome === 'yes' ? 'No' : 'Yes'} - ${counterpartyAmount} USDC
                   </span>
                 </div>
