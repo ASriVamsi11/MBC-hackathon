@@ -1,20 +1,19 @@
-// Contract addresses on Base
-export const CONTRACT_ADDRESS = '0x660d07d944C28C5693DC983B5C5ac1b74C5645D3';
+// Contract addresses on Base Sepolia
+export const CONTRACT_ADDRESS = '0xdD41Cab7a9Bf25724253Caf5e7e32497C643BE9d';
 export const USDC_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
 
-// Escrow Contract ABI
+// Escrow Contract ABI - Updated to match ConditionalEscrow.sol (Option 1: Symmetric Escrow)
 export const ESCROW_ABI = [
   {
     inputs: [
-      { name: 'partyB', type: 'address' },
+      { name: 'beneficiary', type: 'address' },
       { name: 'amountA', type: 'uint256' },
       { name: 'amountB', type: 'uint256' },
-      { name: 'conditionId', type: 'bytes32' },
-      { name: 'outcomeForA', type: 'bool' },
-      { name: 'duration', type: 'uint256' },
+      { name: 'marketId', type: 'string' },
+      { name: 'expectedOutcomeYes', type: 'bool' },
     ],
     name: 'createEscrow',
-    outputs: [{ name: '', type: 'uint256' }],
+    outputs: [{ name: 'escrowId', type: 'uint256' }],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -29,30 +28,39 @@ export const ESCROW_ABI = [
     inputs: [{ name: 'escrowId', type: 'uint256' }],
     name: 'getEscrow',
     outputs: [
-      { name: 'partyA', type: 'address' },
-      { name: 'partyB', type: 'address' },
-      { name: 'amountA', type: 'uint256' },
-      { name: 'amountB', type: 'uint256' },
-      { name: 'conditionId', type: 'bytes32' },
-      { name: 'outcomeForA', type: 'bool' },
-      { name: 'createdAt', type: 'uint256' },
-      { name: 'expiryTime', type: 'uint256' },
-      { name: 'status', type: 'uint8' },
+      {
+        components: [
+          { name: 'depositor', type: 'address' },
+          { name: 'beneficiary', type: 'address' },
+          { name: 'amountA', type: 'uint256' },
+          { name: 'amountB', type: 'uint256' },
+          { name: 'marketId', type: 'string' },
+          { name: 'expectedOutcomeYes', type: 'bool' },
+          { name: 'status', type: 'uint8' },
+          { name: 'createdAt', type: 'uint256' },
+          { name: 'beneficiaryAccepted', type: 'bool' },
+        ],
+        type: 'tuple',
+      },
     ],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [{ name: 'escrowId', type: 'uint256' }],
-    name: 'cancelUnaccepted',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'escrowCount',
-    outputs: [{ name: '', type: 'uint256' }],
+    inputs: [{ name: 'user', type: 'address' }],
+    name: 'getUserStats',
+    outputs: [
+      {
+        components: [
+          { name: 'totalWon', type: 'uint256' },
+          { name: 'totalLost', type: 'uint256' },
+          { name: 'escrowsCreated', type: 'uint256' },
+          { name: 'escrowsWon', type: 'uint256' },
+          { name: 'escrowsLost', type: 'uint256' },
+        ],
+        type: 'tuple',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
@@ -65,20 +73,27 @@ export const ESCROW_ABI = [
   },
   {
     inputs: [{ name: 'user', type: 'address' }],
-    name: 'usernames',
+    name: 'getUsername',
     outputs: [{ name: '', type: 'string' }],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'escrowId', type: 'uint256' }],
+    name: 'emergencyRefund',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     anonymous: false,
     inputs: [
       { indexed: true, name: 'escrowId', type: 'uint256' },
-      { indexed: true, name: 'partyA', type: 'address' },
-      { indexed: true, name: 'partyB', type: 'address' },
-      { indexed: false, name: 'amountA', type: 'uint256' },
-      { indexed: false, name: 'amountB', type: 'uint256' },
-      { indexed: false, name: 'conditionId', type: 'bytes32' },
+      { indexed: true, name: 'depositor', type: 'address' },
+      { indexed: true, name: 'beneficiary', type: 'address' },
+      { indexed: false, name: 'amount', type: 'uint256' },
+      { indexed: false, name: 'marketId', type: 'string' },
+      { indexed: false, name: 'expectedOutcomeYes', type: 'bool' },
     ],
     name: 'EscrowCreated',
     type: 'event',
@@ -87,9 +102,9 @@ export const ESCROW_ABI = [
     anonymous: false,
     inputs: [
       { indexed: true, name: 'escrowId', type: 'uint256' },
-      { indexed: true, name: 'winner', type: 'address' },
-      { indexed: false, name: 'totalAmount', type: 'uint256' },
-      { indexed: false, name: 'outcome', type: 'bool' },
+      { indexed: true, name: 'recipient', type: 'address' },
+      { indexed: false, name: 'amount', type: 'uint256' },
+      { indexed: false, name: 'marketResolvedYes', type: 'bool' },
     ],
     name: 'EscrowResolved',
     type: 'event',

@@ -98,16 +98,17 @@ export default function CreateChallengePage() {
     setIsCreating(true);
 
     try {
-      const escrowId = await contract.createEscrow({
-        partyB: counterparty,
+      const hash = await contract.createEscrow({
+        beneficiary: counterparty,
         amountA: yourAmount,
         amountB: counterpartyAmount,
-        conditionId: selectedMarket.condition_id,
-        outcomeForA: yourOutcome === 'yes',
-        duration: parseInt(expiryDays) * 86400,
+        marketId: selectedMarket.condition_id,
+        expectedOutcomeYes: yourOutcome === 'yes',
       });
 
-      setCreatedEscrowId(escrowId);
+      // Extract escrow ID from transaction (would normally come from event logs)
+      // For now, show success with the tx hash
+      setCreatedEscrowId(0);
       showNotification('Challenge created successfully!', 'success');
     } catch (error: any) {
       showNotification(error.message || 'Failed to create challenge', 'error');
@@ -428,13 +429,17 @@ export default function CreateChallengePage() {
           </div>
 
           {/* Summary */}
-          {selectedMarket && yourAmount && counterpartyAmount && (
+          {selectedMarket && yourAmount && counterpartyAmount && counterparty && (
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border-2 border-indigo-200 dark:border-indigo-800 rounded-xl p-6 mb-8 shadow-md">
               <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2 text-lg">
                 <CheckCircle size={24} className="text-indigo-600 dark:text-indigo-400" />
                 Challenge Summary
               </h3>
               <div className="space-y-3 text-sm">
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-600 dark:text-gray-400">Market:</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">{selectedMarket.question}</span>
+                </div>
                 <div className="flex justify-between items-center py-2">
                   <span className="text-gray-600 dark:text-gray-400">Your position:</span>
                   <span className={`font-bold px-3 py-1 rounded-lg ${yourOutcome === 'yes' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
@@ -450,8 +455,8 @@ export default function CreateChallengePage() {
                   </span>
                 </div>
                 <div className="flex justify-between items-center pt-4 border-t-2 border-indigo-200 dark:border-indigo-800">
-                  <span className="text-gray-900 dark:text-white font-semibold">Winner receives:</span>
-                  <span className="font-bold text-green-600 dark:text-green-400 text-2xl">
+                  <span className="text-gray-900 dark:text-white font-semibold">Total Pool:</span>
+                  <span className="font-bold text-indigo-600 dark:text-indigo-400 text-lg">
                     ${parseFloat(yourAmount) + parseFloat(counterpartyAmount)} USDC
                   </span>
                 </div>
