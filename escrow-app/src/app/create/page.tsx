@@ -2,16 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAccount } from 'wagmi';
+import { useAccount, usePublicClient } from 'wagmi';
 import { Search, Loader, XCircle, CheckCircle, Share2, Zap, Target, Users, DollarSign, AlertCircle } from 'lucide-react';
 import { useContract } from '@/hooks/useContract';
 import { fetchPolymarketMarkets } from '@/lib/polymarket';
 import { formatAddress } from '@/lib/utils';
+import { CONTRACT_ADDRESS, ESCROW_ABI } from '@/lib/contracts';
 
 export default function CreateChallengePage() {
   const router = useRouter();
   const { address, isConnected } = useAccount();
   const contract = useContract();
+  const publicClient = usePublicClient();
 
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -95,9 +97,16 @@ export default function CreateChallengePage() {
       return;
     }
 
+    if (!publicClient) {
+      showNotification('Network not ready', 'error');
+      return;
+    }
+
     setIsCreating(true);
 
     try {
+      showNotification('Creating challenge...', 'info');
+
       const hash = await contract.createEscrow({
         beneficiary: counterparty,
         amountA: yourAmount,
@@ -106,11 +115,30 @@ export default function CreateChallengePage() {
         expectedOutcomeYes: yourOutcome === 'yes',
       });
 
-      // Extract escrow ID from transaction (would normally come from event logs)
-      // For now, show success with the tx hash
-      setCreatedEscrowId(0);
-      showNotification('Challenge created successfully!', 'success');
+      showNotification('Waiting for confirmation...', 'info');
+
+      // Wait for transaction confirmation
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash,
+        timeout: 60000,
+      });
+
+      if (receipt.status === 'success') {
+        // Get the escrow count to determine the new escrow ID (it's count - 1)
+        const escrowCount = await publicClient.readContract({
+          address: CONTRACT_ADDRESS as `0x${string}`,
+          abi: ESCROW_ABI,
+          functionName: 'escrowCount',
+        }) as bigint;
+
+        const escrowId = Number(escrowCount) - 1;
+        setCreatedEscrowId(escrowId);
+        showNotification('Challenge created successfully!', 'success');
+      } else {
+        showNotification('Transaction failed', 'error');
+      }
     } catch (error: any) {
+      console.error('Error creating challenge:', error);
       showNotification(error.message || 'Failed to create challenge', 'error');
     } finally {
       setIsCreating(false);
