@@ -3,10 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAccount } from 'wagmi';
-import { Trophy, Clock, CheckCircle, XCircle, Loader, RefreshCw, Edit } from 'lucide-react';
+import { Trophy, Clock, Loader, RefreshCw, Edit } from 'lucide-react';
 import { useFetchEscrows } from '@/hooks/useFetchEscrows';
 import { useUsername } from '@/hooks/useUsername';
-import { useContract } from '@/hooks/useContract';
 import ChallengeCard from '@/components/ChallengeCard';
 import UsernameInput from '@/components/UsernameInput';
 
@@ -19,26 +18,34 @@ export default function MyEscrowsPage() {
 
   const [stats, setStats] = useState({
     total: 0,
+    pending: 0,
     active: 0,
-    won: 0,
-    lost: 0,
+    completed: 0,
     totalWon: 0,
   });
 
   useEffect(() => {
     if (escrows.length > 0) {
-      const active = escrows.filter(e => e.status === 1).length;
-      const won = escrows.filter(e => e.status === 2 && e.winner === address).length;
-      const lost = escrows.filter(e => e.status === 2 && e.winner !== address).length;
+      // Status: 0 = Active (awaiting resolution)
+      // Status: 1 = Resolved (completed)
+      // Status: 2 = Refunded
+
+      // Pending = Active but beneficiary hasn't accepted yet
+      const pending = escrows.filter(e => e.status === 0 && !e.beneficiaryAccepted).length;
+      // Active = Status 0 with beneficiary accepted, waiting for market resolution
+      const active = escrows.filter(e => e.status === 0 && e.beneficiaryAccepted).length;
+      // Completed = Status 1 (resolved) or Status 2 (refunded)
+      const completed = escrows.filter(e => e.status === 1 || e.status === 2).length;
+
       const totalWon = escrows
-        .filter(e => e.status === 2 && e.winner === address)
-        .reduce((sum, e) => sum + e.amountA + e.amountB, 0);
+        .filter(e => e.status === 1)
+        .reduce((sum, e) => sum + Number(e.amountA) + Number(e.amountB), 0);
 
       setStats({
         total: escrows.length,
+        pending,
         active,
-        won,
-        lost,
+        completed,
         totalWon,
       });
     }
@@ -46,9 +53,9 @@ export default function MyEscrowsPage() {
 
   const filteredEscrows = escrows.filter(escrow => {
     if (filter === 'all') return true;
-    if (filter === 'waiting') return escrow.status === 0;
-    if (filter === 'active') return escrow.status === 1;
-    if (filter === 'completed') return escrow.status === 2;
+    if (filter === 'waiting') return escrow.status === 0 && !escrow.beneficiaryAccepted;
+    if (filter === 'active') return (escrow.status === 0 && escrow.beneficiaryAccepted) || (escrow.status === 1);
+    if (filter === 'completed') return escrow.status === 1 || escrow.status === 2;
     return true;
   });
 
@@ -106,21 +113,18 @@ export default function MyEscrowsPage() {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="text-sm text-gray-600 mb-1">Pending Accept</div>
+          <div className="text-3xl font-bold text-orange-600">{stats.pending}</div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="text-sm text-gray-600 mb-1">Active</div>
           <div className="text-3xl font-bold text-green-600">{stats.active}</div>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="text-sm text-gray-600 mb-1 flex items-center gap-1">
-            <Trophy size={14} />
-            Wins
-          </div>
-          <div className="text-3xl font-bold text-green-600">{stats.won}</div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="text-sm text-gray-600 mb-1">Losses</div>
-          <div className="text-3xl font-bold text-red-600">{stats.lost}</div>
+          <div className="text-sm text-gray-600 mb-1">Completed</div>
+          <div className="text-3xl font-bold text-blue-600">{stats.completed}</div>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -193,15 +197,15 @@ export default function MyEscrowsPage() {
         </div>
       )}
 
-      {/* Win Rate */}
-      {stats.won + stats.lost > 0 && (
-        <div className="mt-8 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-8 text-white text-center">
-          <h3 className="text-2xl font-bold mb-2">Your Win Rate</h3>
+      {/* Total Winnings */}
+      {stats.totalWon > 0 && (
+        <div className="mt-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl shadow-lg p-8 text-white text-center">
+          <h3 className="text-2xl font-bold mb-2">Total Winnings</h3>
           <div className="text-5xl font-bold mb-2">
-            {Math.round((stats.won / (stats.won + stats.lost)) * 100)}%
+            ${(stats.totalWon / 1e6).toFixed(2)} USDC
           </div>
           <p className="text-lg opacity-90">
-            {stats.won} wins out of {stats.won + stats.lost} completed challenges
+            From {stats.completed} completed challenges
           </p>
         </div>
       )}

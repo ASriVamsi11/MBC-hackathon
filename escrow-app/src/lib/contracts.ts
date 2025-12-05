@@ -5,6 +5,12 @@ export const USDC_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
 // Escrow Contract ABI - Updated to match ConditionalEscrow.sol (Option 1: Symmetric Escrow)
 export const ESCROW_ABI = [
   {
+    name: 'escrowCount',
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       { name: 'beneficiary', type: 'address' },
       { name: 'amountA', type: 'uint256' },
