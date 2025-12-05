@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { DollarSign, Wallet, Menu, X, Home, Zap, Trophy, Users, Search, User } from 'lucide-react';
@@ -15,6 +15,12 @@ export default function Header() {
   const { username } = useUsername(address);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <header className="bg-white/80 dark:bg-gray-900/90 backdrop-blur-md shadow-lg border-b border-gray-100/50 dark:border-gray-800/50 sticky top-0 z-50">
@@ -34,7 +40,10 @@ export default function Header() {
             {/* Dark Mode Toggle */}
             <DarkModeToggle />
 
-            {!isConnected ? (
+            {/* Only render wallet UI after mount to prevent hydration mismatch */}
+            {!mounted ? (
+              <div className="w-32 h-10 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse" />
+            ) : !isConnected ? (
               <button
                 onClick={() => connect({ connector: connectors[0] })}
                 className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-5 py-2.5 rounded-xl hover:shadow-lg transition-all font-semibold transform hover:-translate-y-0.5"
@@ -138,18 +147,20 @@ export default function Header() {
               </div>
             )}
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="sm:hidden p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition"
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            {/* Mobile Menu Button - only show after mount */}
+            {mounted && (
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="sm:hidden p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
+        {/* Mobile Menu - only render after mount */}
+        {mounted && mobileMenuOpen && (
           <div className="sm:hidden mt-4 pb-4 border-t border-gray-100 dark:border-gray-800 pt-4 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-xl px-3">
             <nav className="flex flex-col gap-2">
               <Link href="/" className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/30 font-medium py-3 px-3 transition rounded-lg" onClick={() => setMobileMenuOpen(false)}>
