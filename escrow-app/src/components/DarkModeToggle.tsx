@@ -10,14 +10,11 @@ export default function DarkModeToggle() {
   useEffect(() => {
     setMounted(true);
     
-    // Check localStorage
     const savedMode = localStorage.getItem('darkMode');
     const isDark = savedMode === 'true';
     
-    console.log('Initial darkMode:', isDark);
     setDarkMode(isDark);
     
-    // Apply to HTML
     if (isDark) {
       document.documentElement.classList.add('dark');
     } else {
@@ -27,37 +24,26 @@ export default function DarkModeToggle() {
 
   const toggle = () => {
     const newMode = !darkMode;
-    console.log('Toggling to:', newMode ? 'DARK' : 'LIGHT');
-    
-    // Update state
     setDarkMode(newMode);
-    
-    // Update localStorage
     localStorage.setItem('darkMode', String(newMode));
     
-    // Update HTML class
     if (newMode) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-    
-    // Verify
-    console.log('HTML now has dark class:', document.documentElement.classList.contains('dark'));
-    console.log('localStorage now:', localStorage.getItem('darkMode'));
   };
 
-  if (!mounted) {
-    return <div className="w-10 h-10" />;
-  }
-
+  // Return the same structure during SSR and client-side
+  // Just don't show the icon until mounted
   return (
     <button
       onClick={toggle}
       className="p-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all"
       aria-label="Toggle dark mode"
+      suppressHydrationWarning
     >
-      {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+      {mounted ? (darkMode ? <Sun size={20} /> : <Moon size={20} />) : <div className="w-5 h-5" />}
     </button>
   );
 }

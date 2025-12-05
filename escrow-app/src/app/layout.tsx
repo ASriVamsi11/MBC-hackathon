@@ -7,16 +7,16 @@ import Header from '@/components/Header';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'ConditionalEscrow - Challenge Friends on Polymarket',
+  title: 'Base Bets - Challenge Friends on Polymarket',
   description: 'Create conditional escrows and challenge friends on Polymarket outcomes. Built on Base with USDC.',
   openGraph: {
-    title: 'ConditionalEscrow',
+    title: 'Base Bets',
     description: 'Challenge friends on Polymarket outcomes',
     images: ['/og-image.png'],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ConditionalEscrow',
+    title: 'Base Bets',
     description: 'Challenge friends on Polymarket outcomes',
     images: ['/og-image.png'],
   },
