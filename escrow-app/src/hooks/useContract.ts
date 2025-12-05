@@ -27,12 +27,18 @@ export function useContract() {
     marketId: string;
     expectedOutcomeYes: boolean;
   }) => {
-    // Approve depositor's amount
-    await approveUSDC(params.amountA);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
     const amountABigInt = parseUSDC(params.amountA);
     const amountBBigInt = parseUSDC(params.amountB);
+
+    try {
+      // Approve USDC spending for this specific amount
+      await approveUSDC(params.amountA);
+      // Wait for approval transaction to be mined (critical for paymaster estimation)
+      await new Promise(resolve => setTimeout(resolve, 1500));
+    } catch (error) {
+      console.error('USDC approval failed:', error);
+      throw new Error('Failed to approve USDC. Ensure you have sufficient USDC balance.');
+    }
 
     const hash = await writeContractAsync({
       address: CONTRACT_ADDRESS as `0x${string}`,
@@ -50,13 +56,7 @@ export function useContract() {
     return hash;
   };
 
-  const acceptEscrow = async (escrowId: number, amountB?: string) => {
-    // If amountB is provided, approve it first
-    if (amountB) {
-      await approveUSDC(amountB);
-      await new Promise(resolve => setTimeout(resolve, 2000));
-    }
-    
+  const acceptEscrow = async (escrowId: number) => {
     const hash = await writeContractAsync({
       address: CONTRACT_ADDRESS as `0x${string}`,
       abi: ESCROW_ABI,

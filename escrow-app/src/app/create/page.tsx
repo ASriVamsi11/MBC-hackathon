@@ -6,7 +6,7 @@ import { useAccount, usePublicClient } from 'wagmi';
 import { Search, Loader, XCircle, CheckCircle, Share2, Zap, Target, Users, DollarSign, AlertCircle } from 'lucide-react';
 import { useContract } from '@/hooks/useContract';
 import { fetchPolymarketMarkets } from '@/lib/polymarket';
-import { formatAddress } from '@/lib/utils';
+import { formatAddress, parseUSDC } from '@/lib/utils';
 import { CONTRACT_ADDRESS, ESCROW_ABI } from '@/lib/contracts';
 
 export default function CreateChallengePage() {
@@ -97,6 +97,27 @@ export default function CreateChallengePage() {
       return;
     }
 
+    // Validate beneficiary address format
+    if (!counterparty.startsWith('0x') || counterparty.length !== 42) {
+      showNotification('Invalid beneficiary address. Must be a valid Ethereum address (0x...)', 'error');
+      return;
+    }
+
+    // Prevent self-escrow
+    if (counterparty.toLowerCase() === address.toLowerCase()) {
+      showNotification('Cannot create a challenge with your own address', 'error');
+      return;
+    }
+
+    // Validate amounts are positive
+    const amountA = parseFloat(yourAmount);
+    const amountB = parseFloat(counterpartyAmount);
+
+    if (amountA <= 0 || amountB <= 0) {
+      showNotification('Amounts must be greater than 0', 'error');
+      return;
+    }
+
     if (!publicClient) {
       showNotification('Network not ready', 'error');
       return;
@@ -139,7 +160,23 @@ export default function CreateChallengePage() {
       }
     } catch (error: any) {
       console.error('Error creating challenge:', error);
-      showNotification(error.message || 'Failed to create challenge', 'error');
+
+      // Provide more helpful error messages
+      let errorMessage = 'Failed to create challenge';
+
+      if (error.message?.includes('gas')) {
+        errorMessage = 'Gas estimation failed. Check that you have sufficient USDC balance.';
+      } else if (error.message?.includes('approval') || error.message?.includes('Approve')) {
+        errorMessage = 'USDC approval failed. Please check your balance and try again.';
+      } else if (error.message?.includes('user operation reverted')) {
+        errorMessage = 'Transaction failed. Make sure you have enough USDC and have approved spending.';
+      } else if (error.message?.includes('invalid address')) {
+        errorMessage = 'Invalid beneficiary address. Please double-check the address format.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      showNotification(errorMessage, 'error');
     } finally {
       setIsCreating(false);
     }
