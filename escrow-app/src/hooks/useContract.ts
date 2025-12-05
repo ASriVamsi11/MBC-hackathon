@@ -50,7 +50,13 @@ export function useContract() {
     return hash;
   };
 
-  const acceptEscrow = async (escrowId: number) => {
+  const acceptEscrow = async (escrowId: number, amountB?: string) => {
+    // If amountB is provided, approve it first
+    if (amountB) {
+      await approveUSDC(amountB);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+    
     const hash = await writeContractAsync({
       address: CONTRACT_ADDRESS as `0x${string}`,
       abi: ESCROW_ABI,
@@ -72,22 +78,10 @@ export function useContract() {
     return hash;
   };
 
-  const setUsername = async (username: string) => {
-    const hash = await writeContractAsync({
-      address: CONTRACT_ADDRESS as `0x${string}`,
-      abi: ESCROW_ABI,
-      functionName: 'setUsername',
-      args: [username],
-    });
-
-    return hash;
-  };
-
   return {
     approveUSDC,
     createEscrow,
     acceptEscrow,
     emergencyRefund,
-    setUsername,
   };
 }

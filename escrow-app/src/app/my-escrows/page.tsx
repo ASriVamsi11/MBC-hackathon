@@ -3,17 +3,13 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAccount } from 'wagmi';
-import { Trophy, Clock, Loader, RefreshCw, Edit } from 'lucide-react';
+import { Trophy, Clock, Loader, RefreshCw } from 'lucide-react';
 import { useFetchEscrows } from '@/hooks/useFetchEscrows';
-import { useUsername } from '@/hooks/useUsername';
 import ChallengeCard from '@/components/ChallengeCard';
-import UsernameInput from '@/components/UsernameInput';
 
 export default function MyEscrowsPage() {
   const { address, isConnected } = useAccount();
   const { escrows, isLoading, refetch } = useFetchEscrows(address);
-  const { username } = useUsername(address);
-  const [showUsernameInput, setShowUsernameInput] = useState(false);
   const [filter, setFilter] = useState<'all' | 'waiting' | 'active' | 'completed'>('all');
 
   const [stats, setStats] = useState({
@@ -71,38 +67,15 @@ export default function MyEscrowsPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">My Challenges</h1>
-            <div className="flex items-center gap-3">
-              <p className="text-gray-600">
-                {username || 'Anonymous User'}
-              </p>
-              <button
-                onClick={() => setShowUsernameInput(!showUsernameInput)}
-                className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1"
-              >
-                <Edit size={14} />
-                Edit
-              </button>
-            </div>
-          </div>
-          <button
-            onClick={refetch}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
-          >
-            <RefreshCw size={16} />
-            Refresh
-          </button>
-        </div>
-
-        {/* Username Input */}
-        {showUsernameInput && (
-          <div className="mb-6">
-            <UsernameInput onComplete={() => setShowUsernameInput(false)} />
-          </div>
-        )}
+      <div className="mb-8 flex items-center justify-between">
+        <h1 className="text-3xl font-bold text-gray-900">My Challenges</h1>
+        <button
+          onClick={refetch}
+          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+        >
+          <RefreshCw size={16} />
+          Refresh
+        </button>
       </div>
 
       {/* Stats Cards */}

@@ -71,20 +71,6 @@ export const ESCROW_ABI = [
     type: 'function',
   },
   {
-    inputs: [{ name: '_username', type: 'string' }],
-    name: 'setUsername',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [{ name: 'user', type: 'address' }],
-    name: 'getUsername',
-    outputs: [{ name: '', type: 'string' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
     inputs: [{ name: 'escrowId', type: 'uint256' }],
     name: 'emergencyRefund',
     outputs: [],
