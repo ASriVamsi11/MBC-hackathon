@@ -2,16 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAccount } from 'wagmi';
+import { useAccount, usePublicClient } from 'wagmi';
 import { Search, Loader, XCircle, CheckCircle, Share2, Zap, Target, Users, DollarSign, AlertCircle } from 'lucide-react';
 import { useContract } from '@/hooks/useContract';
 import { fetchPolymarketMarkets } from '@/lib/polymarket';
-import { formatAddress } from '@/lib/utils';
+import { formatAddress, parseUSDC } from '@/lib/utils';
+import { CONTRACT_ADDRESS, ESCROW_ABI } from '@/lib/contracts';
 
 export default function CreateChallengePage() {
   const router = useRouter();
   const { address, isConnected } = useAccount();
   const contract = useContract();
+  const publicClient = usePublicClient();
 
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -95,22 +97,86 @@ export default function CreateChallengePage() {
       return;
     }
 
+    // Validate beneficiary address format
+    if (!counterparty.startsWith('0x') || counterparty.length !== 42) {
+      showNotification('Invalid beneficiary address. Must be a valid Ethereum address (0x...)', 'error');
+      return;
+    }
+
+    // Prevent self-escrow
+    if (counterparty.toLowerCase() === address.toLowerCase()) {
+      showNotification('Cannot create a challenge with your own address', 'error');
+      return;
+    }
+
+    // Validate amounts are positive
+    const amountA = parseFloat(yourAmount);
+    const amountB = parseFloat(counterpartyAmount);
+
+    if (amountA <= 0 || amountB <= 0) {
+      showNotification('Amounts must be greater than 0', 'error');
+      return;
+    }
+
+    if (!publicClient) {
+      showNotification('Network not ready', 'error');
+      return;
+    }
+
     setIsCreating(true);
 
     try {
-      const escrowId = await contract.createEscrow({
-        partyB: counterparty,
+      showNotification('Creating challenge...', 'info');
+
+      const hash = await contract.createEscrow({
+        beneficiary: counterparty,
         amountA: yourAmount,
         amountB: counterpartyAmount,
-        conditionId: selectedMarket.condition_id,
-        outcomeForA: yourOutcome === 'yes',
-        duration: parseInt(expiryDays) * 86400,
+        marketId: selectedMarket.condition_id,
+        expectedOutcomeYes: yourOutcome === 'yes',
       });
 
-      setCreatedEscrowId(escrowId);
-      showNotification('Challenge created successfully!', 'success');
+      showNotification('Waiting for confirmation...', 'info');
+
+      // Wait for transaction confirmation
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash,
+        timeout: 60000,
+      });
+
+      if (receipt.status === 'success') {
+        // Get the escrow count to determine the new escrow ID (it's count - 1)
+        const escrowCount = await publicClient.readContract({
+          address: CONTRACT_ADDRESS as `0x${string}`,
+          abi: ESCROW_ABI,
+          functionName: 'escrowCount',
+        }) as bigint;
+
+        const escrowId = Number(escrowCount) - 1;
+        setCreatedEscrowId(escrowId);
+        showNotification('Challenge created successfully!', 'success');
+      } else {
+        showNotification('Transaction failed', 'error');
+      }
     } catch (error: any) {
-      showNotification(error.message || 'Failed to create challenge', 'error');
+      console.error('Error creating challenge:', error);
+
+      // Provide more helpful error messages
+      let errorMessage = 'Failed to create challenge';
+
+      if (error.message?.includes('gas')) {
+        errorMessage = 'Gas estimation failed. Check that you have sufficient USDC balance.';
+      } else if (error.message?.includes('approval') || error.message?.includes('Approve')) {
+        errorMessage = 'USDC approval failed. Please check your balance and try again.';
+      } else if (error.message?.includes('user operation reverted')) {
+        errorMessage = 'Transaction failed. Make sure you have enough USDC and have approved spending.';
+      } else if (error.message?.includes('invalid address')) {
+        errorMessage = 'Invalid beneficiary address. Please double-check the address format.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      showNotification(errorMessage, 'error');
     } finally {
       setIsCreating(false);
     }
@@ -428,13 +494,17 @@ export default function CreateChallengePage() {
           </div>
 
           {/* Summary */}
-          {selectedMarket && yourAmount && counterpartyAmount && (
+          {selectedMarket && yourAmount && counterpartyAmount && counterparty && (
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border-2 border-indigo-200 dark:border-indigo-800 rounded-xl p-6 mb-8 shadow-md">
               <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2 text-lg">
                 <CheckCircle size={24} className="text-indigo-600 dark:text-indigo-400" />
                 Challenge Summary
               </h3>
               <div className="space-y-3 text-sm">
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-600 dark:text-gray-400">Market:</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">{selectedMarket.question}</span>
+                </div>
                 <div className="flex justify-between items-center py-2">
                   <span className="text-gray-600 dark:text-gray-400">Your position:</span>
                   <span className={`font-bold px-3 py-1 rounded-lg ${yourOutcome === 'yes' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
@@ -450,8 +520,8 @@ export default function CreateChallengePage() {
                   </span>
                 </div>
                 <div className="flex justify-between items-center pt-4 border-t-2 border-indigo-200 dark:border-indigo-800">
-                  <span className="text-gray-900 dark:text-white font-semibold">Winner receives:</span>
-                  <span className="font-bold text-green-600 dark:text-green-400 text-2xl">
+                  <span className="text-gray-900 dark:text-white font-semibold">Total Pool:</span>
+                  <span className="font-bold text-indigo-600 dark:text-indigo-400 text-lg">
                     ${parseFloat(yourAmount) + parseFloat(counterpartyAmount)} USDC
                   </span>
                 </div>

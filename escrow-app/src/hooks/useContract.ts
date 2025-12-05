@@ -21,42 +21,42 @@ export function useContract() {
   };
 
   const createEscrow = async (params: {
-    partyB: string;
+    beneficiary: string;
     amountA: string;
     amountB: string;
-    conditionId: string;
-    outcomeForA: boolean;
-    duration: number;
+    marketId: string;
+    expectedOutcomeYes: boolean;
   }) => {
-    await approveUSDC(params.amountA);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
     const amountABigInt = parseUSDC(params.amountA);
     const amountBBigInt = parseUSDC(params.amountB);
-    const conditionIdBytes32 = params.conditionId.padEnd(66, '0') as `0x${string}`;
+
+    try {
+      // Approve USDC spending for this specific amount
+      await approveUSDC(params.amountA);
+      // Wait for approval transaction to be mined (critical for paymaster estimation)
+      await new Promise(resolve => setTimeout(resolve, 1500));
+    } catch (error) {
+      console.error('USDC approval failed:', error);
+      throw new Error('Failed to approve USDC. Ensure you have sufficient USDC balance.');
+    }
 
     const hash = await writeContractAsync({
       address: CONTRACT_ADDRESS as `0x${string}`,
       abi: ESCROW_ABI,
       functionName: 'createEscrow',
       args: [
-        params.partyB as `0x${string}`,
+        params.beneficiary as `0x${string}`,
         amountABigInt,
         amountBBigInt,
-        conditionIdBytes32,
-        params.outcomeForA,
-        BigInt(params.duration),
+        params.marketId,
+        params.expectedOutcomeYes,
       ],
     });
 
-    return Math.floor(Math.random() * 10000);
+    return hash;
   };
 
-  const acceptEscrow = async (escrowId: number, amount: bigint) => {
-    const amountStr = (Number(amount) / 1e6).toFixed(2);
-    await approveUSDC(amountStr);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
+  const acceptEscrow = async (escrowId: number) => {
     const hash = await writeContractAsync({
       address: CONTRACT_ADDRESS as `0x${string}`,
       abi: ESCROW_ABI,
@@ -67,38 +67,21 @@ export function useContract() {
     return hash;
   };
 
-  const cancelEscrow = async (escrowId: number) => {
+  const emergencyRefund = async (escrowId: number) => {
     const hash = await writeContractAsync({
       address: CONTRACT_ADDRESS as `0x${string}`,
       abi: ESCROW_ABI,
-      functionName: 'cancelUnaccepted',
+      functionName: 'emergencyRefund',
       args: [BigInt(escrowId)],
     });
 
     return hash;
   };
 
-  const setUsername = async (username: string) => {
-    const hash = await writeContractAsync({
-      address: CONTRACT_ADDRESS as `0x${string}`,
-      abi: ESCROW_ABI,
-      functionName: 'setUsername',
-      args: [username],
-    });
-
-    return hash;
-  };
-
-  const getEscrow = async (escrowId: number) => {
-    return null;
-  };
-
   return {
     approveUSDC,
     createEscrow,
     acceptEscrow,
-    cancelEscrow,
-    setUsername,
-    getEscrow,
+    emergencyRefund,
   };
 }

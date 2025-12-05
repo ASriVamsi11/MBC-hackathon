@@ -27,29 +27,35 @@ export declare namespace ConditionalEscrow {
   export type EscrowStruct = {
     depositor: AddressLike;
     beneficiary: AddressLike;
-    amount: BigNumberish;
+    amountA: BigNumberish;
+    amountB: BigNumberish;
     marketId: string;
     expectedOutcomeYes: boolean;
     status: BigNumberish;
     createdAt: BigNumberish;
+    beneficiaryAccepted: boolean;
   };
 
   export type EscrowStructOutput = [
     depositor: string,
     beneficiary: string,
-    amount: bigint,
+    amountA: bigint,
+    amountB: bigint,
     marketId: string,
     expectedOutcomeYes: boolean,
     status: bigint,
-    createdAt: bigint
+    createdAt: bigint,
+    beneficiaryAccepted: boolean
   ] & {
     depositor: string;
     beneficiary: string;
-    amount: bigint;
+    amountA: bigint;
+    amountB: bigint;
     marketId: string;
     expectedOutcomeYes: boolean;
     status: bigint;
     createdAt: bigint;
+    beneficiaryAccepted: boolean;
   };
 
   export type UserStatsStruct = {
@@ -80,6 +86,7 @@ export interface ConditionalEscrowInterface extends Interface {
     nameOrSignature:
       | "ESCROW_TIMEOUT"
       | "MAX_USERNAME_LENGTH"
+      | "acceptEscrow"
       | "canEmergencyRefund"
       | "createEscrow"
       | "emergencyRefund"
@@ -123,12 +130,16 @@ export interface ConditionalEscrowInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "acceptEscrow",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "canEmergencyRefund",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "createEscrow",
-    values: [AddressLike, BigNumberish, string, boolean]
+    values: [AddressLike, BigNumberish, BigNumberish, string, boolean]
   ): string;
   encodeFunctionData(
     functionFragment: "emergencyRefund",
@@ -205,6 +216,10 @@ export interface ConditionalEscrowInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "MAX_USERNAME_LENGTH",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "acceptEscrow",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -440,6 +455,12 @@ export interface ConditionalEscrow extends BaseContract {
 
   MAX_USERNAME_LENGTH: TypedContractMethod<[], [bigint], "view">;
 
+  acceptEscrow: TypedContractMethod<
+    [escrowId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   canEmergencyRefund: TypedContractMethod<
     [escrowId: BigNumberish],
     [[boolean, string] & { canRefund: boolean; reason: string }],
@@ -449,7 +470,8 @@ export interface ConditionalEscrow extends BaseContract {
   createEscrow: TypedContractMethod<
     [
       beneficiary: AddressLike,
-      amount: BigNumberish,
+      amountA: BigNumberish,
+      amountB: BigNumberish,
       marketId: string,
       expectedOutcomeYes: boolean
     ],
@@ -468,14 +490,26 @@ export interface ConditionalEscrow extends BaseContract {
   escrows: TypedContractMethod<
     [arg0: BigNumberish],
     [
-      [string, string, bigint, string, boolean, bigint, bigint] & {
+      [
+        string,
+        string,
+        bigint,
+        bigint,
+        string,
+        boolean,
+        bigint,
+        bigint,
+        boolean
+      ] & {
         depositor: string;
         beneficiary: string;
-        amount: bigint;
+        amountA: bigint;
+        amountB: bigint;
         marketId: string;
         expectedOutcomeYes: boolean;
         status: bigint;
         createdAt: bigint;
+        beneficiaryAccepted: boolean;
       }
     ],
     "view"
@@ -574,6 +608,9 @@ export interface ConditionalEscrow extends BaseContract {
     nameOrSignature: "MAX_USERNAME_LENGTH"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
+    nameOrSignature: "acceptEscrow"
+  ): TypedContractMethod<[escrowId: BigNumberish], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "canEmergencyRefund"
   ): TypedContractMethod<
     [escrowId: BigNumberish],
@@ -585,7 +622,8 @@ export interface ConditionalEscrow extends BaseContract {
   ): TypedContractMethod<
     [
       beneficiary: AddressLike,
-      amount: BigNumberish,
+      amountA: BigNumberish,
+      amountB: BigNumberish,
       marketId: string,
       expectedOutcomeYes: boolean
     ],
@@ -603,14 +641,26 @@ export interface ConditionalEscrow extends BaseContract {
   ): TypedContractMethod<
     [arg0: BigNumberish],
     [
-      [string, string, bigint, string, boolean, bigint, bigint] & {
+      [
+        string,
+        string,
+        bigint,
+        bigint,
+        string,
+        boolean,
+        bigint,
+        bigint,
+        boolean
+      ] & {
         depositor: string;
         beneficiary: string;
-        amount: bigint;
+        amountA: bigint;
+        amountB: bigint;
         marketId: string;
         expectedOutcomeYes: boolean;
         status: bigint;
         createdAt: bigint;
+        beneficiaryAccepted: boolean;
       }
     ],
     "view"

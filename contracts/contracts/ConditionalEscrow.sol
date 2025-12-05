@@ -49,11 +49,13 @@ contract ConditionalEscrow is Ownable, ReentrancyGuard {
     struct Escrow {
         address depositor;          // Who deposited the USDC
         address beneficiary;        // Who receives USDC if condition is met
-        uint256 amount;             // Amount of USDC (6 decimals)
+        uint256 amountA;            // Amount staked by depositor (6 decimals)
+        uint256 amountB;            // Amount staked by beneficiary (6 decimals)
         string marketId;            // Polymarket condition ID (e.g., "0x1234...")
-        bool expectedOutcomeYes;    // If true, beneficiary wins when YES wins
+        bool expectedOutcomeYes;    // If true, depositor wins when YES wins
         Status status;              // Current status of the escrow
         uint256 createdAt;          // Block timestamp when created
+        bool beneficiaryAccepted;   // Whether beneficiary has accepted and locked funds
     }
 
     /// @notice User statistics
@@ -143,27 +145,29 @@ contract ConditionalEscrow is Ownable, ReentrancyGuard {
 
     /**
      * @notice Create a new conditional escrow
-     * @dev Caller must have approved this contract to spend `amount` USDC
+     * @dev Caller (depositor) must have approved this contract to spend `amountA` USDC
      * @param beneficiary Address that receives funds if expectedOutcome occurs
-     * @param amount USDC amount to escrow (6 decimals, e.g., 100000000 = 100 USDC)
+     * @param amountA USDC amount depositor is staking (6 decimals, e.g., 100000000 = 100 USDC)
+     * @param amountB USDC amount beneficiary must stake to accept (6 decimals)
      * @param marketId Polymarket condition ID to use as oracle
-     * @param expectedOutcomeYes If true, beneficiary wins when market resolves YES
+     * @param expectedOutcomeYes If true, depositor wins when market resolves YES
      * @return escrowId The ID of the newly created escrow
      */
     function createEscrow(
         address beneficiary,
-        uint256 amount,
+        uint256 amountA,
+        uint256 amountB,
         string calldata marketId,
         bool expectedOutcomeYes
     ) external nonReentrant returns (uint256 escrowId) {
         // Validation
         if (beneficiary == address(0)) revert InvalidAddress();
         if (beneficiary == msg.sender) revert CannotEscrowToSelf();
-        if (amount == 0) revert InvalidAmount();
+        if (amountA == 0 || amountB == 0) revert InvalidAmount();
         if (bytes(marketId).length == 0) revert InvalidMarketId();
 
-        // Transfer USDC from caller to this contract
-        usdc.safeTransferFrom(msg.sender, address(this), amount);
+        // Transfer USDC from depositor to this contract
+        usdc.safeTransferFrom(msg.sender, address(this), amountA);
 
         // Create escrow
         escrowId = escrowCount++;
@@ -171,11 +175,13 @@ contract ConditionalEscrow is Ownable, ReentrancyGuard {
         escrows[escrowId] = Escrow({
             depositor: msg.sender,
             beneficiary: beneficiary,
-            amount: amount,
+            amountA: amountA,
+            amountB: amountB,
             marketId: marketId,
             expectedOutcomeYes: expectedOutcomeYes,
             status: Status.Active,
-            createdAt: block.timestamp
+            createdAt: block.timestamp,
+            beneficiaryAccepted: false
         });
 
         // Update stats
@@ -185,10 +191,30 @@ contract ConditionalEscrow is Ownable, ReentrancyGuard {
             escrowId,
             msg.sender,
             beneficiary,
-            amount,
+            amountA,
             marketId,
             expectedOutcomeYes
         );
+    }
+
+    /**
+     * @notice Accept an escrow by depositing the required beneficiary amount
+     * @dev Beneficiary must have approved this contract to spend `amountB` USDC
+     * @param escrowId The ID of the escrow to accept
+     */
+    function acceptEscrow(uint256 escrowId) external nonReentrant {
+        Escrow storage escrow = escrows[escrowId];
+
+        if (escrow.amountA == 0) revert EscrowDoesNotExist();
+        if (escrow.status != Status.Active) revert EscrowNotActive();
+        if (msg.sender != escrow.beneficiary) revert NotAuthorized();
+        if (escrow.beneficiaryAccepted) revert("Escrow already accepted");
+
+        // Transfer USDC from beneficiary to this contract
+        usdc.safeTransferFrom(msg.sender, address(this), escrow.amountB);
+
+        // Mark as accepted
+        escrow.beneficiaryAccepted = true;
     }
 
     // ============ External Functions: Resolver ============
@@ -207,32 +233,38 @@ contract ConditionalEscrow is Ownable, ReentrancyGuard {
 
         Escrow storage escrow = escrows[escrowId];
 
-        if (escrow.amount == 0) revert EscrowDoesNotExist();
+        if (escrow.amountA == 0) revert EscrowDoesNotExist();
         if (escrow.status != Status.Active) revert EscrowNotActive();
+        if (!escrow.beneficiaryAccepted) revert("Escrow not yet accepted");
 
         // Update status
         escrow.status = Status.Resolved;
 
+        // Total payout to winner
+        uint256 totalAmount = escrow.amountA + escrow.amountB;
+
         // Determine recipient and update stats
         address recipient;
         if (marketResolvedYes == escrow.expectedOutcomeYes) {
-            // Beneficiary wins
-            recipient = escrow.beneficiary;
-            userStats[escrow.beneficiary].totalWon += escrow.amount;
-            userStats[escrow.beneficiary].escrowsWon++;
-            userStats[escrow.depositor].totalLost += escrow.amount;
-            userStats[escrow.depositor].escrowsLost++;
-        } else {
-            // Depositor gets refund (they "win" by not losing)
+            // Depositor wins (they predicted correctly)
             recipient = escrow.depositor;
+            userStats[escrow.depositor].totalWon += totalAmount;
             userStats[escrow.depositor].escrowsWon++;
+            userStats[escrow.beneficiary].totalLost += totalAmount;
             userStats[escrow.beneficiary].escrowsLost++;
+        } else {
+            // Beneficiary wins (depositor's prediction was wrong)
+            recipient = escrow.beneficiary;
+            userStats[escrow.beneficiary].totalWon += totalAmount;
+            userStats[escrow.beneficiary].escrowsWon++;
+            userStats[escrow.depositor].totalLost += totalAmount;
+            userStats[escrow.depositor].escrowsLost++;
         }
 
-        // Transfer funds
-        usdc.safeTransfer(recipient, escrow.amount);
+        // Transfer all funds to winner
+        usdc.safeTransfer(recipient, totalAmount);
 
-        emit EscrowResolved(escrowId, recipient, escrow.amount, marketResolvedYes);
+        emit EscrowResolved(escrowId, recipient, totalAmount, marketResolvedYes);
     }
 
     /**
@@ -251,29 +283,33 @@ contract ConditionalEscrow is Ownable, ReentrancyGuard {
         for (uint256 i = 0; i < escrowIds.length; i++) {
             Escrow storage escrow = escrows[escrowIds[i]];
 
-            // Skip if not valid/active
-            if (escrow.amount == 0 || escrow.status != Status.Active) {
+            // Skip if not valid/active/accepted
+            if (escrow.amountA == 0 || escrow.status != Status.Active || !escrow.beneficiaryAccepted) {
                 continue;
             }
 
             escrow.status = Status.Resolved;
 
+            uint256 totalAmount = escrow.amountA + escrow.amountB;
+
             address recipient;
             if (outcomes[i] == escrow.expectedOutcomeYes) {
-                recipient = escrow.beneficiary;
-                userStats[escrow.beneficiary].totalWon += escrow.amount;
-                userStats[escrow.beneficiary].escrowsWon++;
-                userStats[escrow.depositor].totalLost += escrow.amount;
-                userStats[escrow.depositor].escrowsLost++;
-            } else {
                 recipient = escrow.depositor;
+                userStats[escrow.depositor].totalWon += totalAmount;
                 userStats[escrow.depositor].escrowsWon++;
+                userStats[escrow.beneficiary].totalLost += totalAmount;
                 userStats[escrow.beneficiary].escrowsLost++;
+            } else {
+                recipient = escrow.beneficiary;
+                userStats[escrow.beneficiary].totalWon += totalAmount;
+                userStats[escrow.beneficiary].escrowsWon++;
+                userStats[escrow.depositor].totalLost += totalAmount;
+                userStats[escrow.depositor].escrowsLost++;
             }
 
-            usdc.safeTransfer(recipient, escrow.amount);
+            usdc.safeTransfer(recipient, totalAmount);
 
-            emit EscrowResolved(escrowIds[i], recipient, escrow.amount, outcomes[i]);
+            emit EscrowResolved(escrowIds[i], recipient, totalAmount, outcomes[i]);
         }
     }
 
@@ -287,15 +323,23 @@ contract ConditionalEscrow is Ownable, ReentrancyGuard {
     function emergencyRefund(uint256 escrowId) external nonReentrant {
         Escrow storage escrow = escrows[escrowId];
 
-        if (escrow.amount == 0) revert EscrowDoesNotExist();
+        if (escrow.amountA == 0) revert EscrowDoesNotExist();
         if (escrow.status != Status.Active) revert EscrowNotActive();
         if (block.timestamp < escrow.createdAt + ESCROW_TIMEOUT) revert TimeoutNotReached();
         if (msg.sender != escrow.depositor && msg.sender != owner()) revert NotAuthorized();
 
         escrow.status = Status.Refunded;
-        usdc.safeTransfer(escrow.depositor, escrow.amount);
 
-        emit EscrowRefunded(escrowId, escrow.depositor, escrow.amount, "timeout");
+        // Refund depositor's amount
+        usdc.safeTransfer(escrow.depositor, escrow.amountA);
+
+        // If beneficiary accepted and deposited, refund their amount too
+        if (escrow.beneficiaryAccepted) {
+            usdc.safeTransfer(escrow.beneficiary, escrow.amountB);
+            emit EscrowRefunded(escrowId, escrow.beneficiary, escrow.amountB, "timeout");
+        }
+
+        emit EscrowRefunded(escrowId, escrow.depositor, escrow.amountA, "timeout");
     }
 
     // ============ External Functions: Social ============
@@ -352,7 +396,7 @@ contract ConditionalEscrow is Ownable, ReentrancyGuard {
     ) external view returns (bool canRefund, string memory reason) {
         Escrow memory escrow = escrows[escrowId];
 
-        if (escrow.amount == 0) {
+        if (escrow.amountA == 0) {
             return (false, "Escrow does not exist");
         }
         if (escrow.status != Status.Active) {
